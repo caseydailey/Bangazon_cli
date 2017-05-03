@@ -1,12 +1,21 @@
-# Issue Template for Bangazon Command Line Interface
+## Issue/Feature Template
 
-1. Product Ticket Title:
-2. Proposed Feature Title:
-3. Description of the feature:
- * What:
- * Where (when the feature would show up):
- * How (what implentation is needed):
-4. What files will be created or edited (where, file path):
-5. Potential Impact on the Project (possible conflicts with other features, hierarchy of feature completion):
-6. Estimated time of completion:
-7. Actual time of completion (added as a comment when moved to Done column):
+#### Context
+***
+   * What should this feature do? Or what issue are we addressing?
+   * What unittests are associated with this feature?
+   * When/where should this feature appear?
+   * OR where is the issue located? 
+   
+#### Associated product ticket
+***
+   * [A link to a ticket](link.com)
+
+#### Process
+***
+   * Potential impact on code. Do you anticipate this causing problems with code that is already in place?
+   * Suggested implementation.
+   
+#### Expected Result
+***
+   * What changes will this feature produce?
