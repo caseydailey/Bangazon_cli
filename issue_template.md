@@ -3,7 +3,6 @@
 #### Context
 ***
    * What should this feature do? Or what issue are we addressing?
-   * What unittests are associated with this feature?
    * When/where should this feature appear?
    * OR where is the issue located? 
    
@@ -14,6 +13,7 @@
 #### Process
 ***
    * Potential impact on code. Do you anticipate this causing problems with code that is already in place?
+   * Any testing associated with this feature.
    * Suggested implementation.
    
 #### Expected Result
