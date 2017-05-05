@@ -1,64 +1,48 @@
 import sys; sys.path.append('../cli/')
-
 import unittest
-from customer import Customer
-from paymenttype import PaymentType
-from order import Order
-from product import Product
 import admintasks
 
 class TestSweet(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(self):
-        self.gerald = Customer(first_name="Gerald", last_name="Krazinsky")
-        self.gerald.save()
 
-        self.visa = PaymentType(name="Visa", account_number=1, customer_id=1)
-        self.visa.save()
+    def test_user_can_create_customer(self):
+        # come back to these parameters later
+        admintasks.write_customer_to_database(name, address, city, state, postal_code, telephone)
+        saved_customer = admintasks.read_customer_from_database()
 
-        self.order1 = Order(customer_id=1)
-        self.order1.save()
-    
-    def test_customer_has_first_name(self):
-        self.assertEqual(self.gerald.first_name, "Gerald")
+        self.assertEqual(1, saved_customer.id)
 
-    def test_customer_has_last_name(self):
-        self.assertEqual(self.gerald.last_name, "Krazinsky")
-
-    def test_user_can_view_customer_list(self):
-        customer_list = admintasks.read_customer_list(self)
-        self.assertIn("Gerald", customer_list)  
 
     def test_user_can_activate_customer(self):
-        admintasks.activate_customer(self, self.gerald)
-        self.assertEqual(self.gerald.active, True)
+        # we are passing an id into the activate_customer method, which should set the active property of the customer who's id equals the customer id passed, as an argument, to true
+        admintasks.activate_customer(1)
+        # get_active_customer selects the customer id from the customer table where customer.active equals true
+        active_customer = admintasks.get_active_customer()
+
+        self.assertEqual(active_customer, 1)
 
     def test_user_can_add_payment_type_to_customer_account(self):
-        self.assertEqual(self.visa.customer_id, 1)
+        # create_payment_type will insert into the payment type table the values from the user's input, the '1' in the assertion is referring to the customer id 
+        admintasks.create_payment_type('Visa', 123456, 1)
+        payment_type = admintasks.get_payment_types()
 
-    def test_user_can_read_product_list(self):
-        inventory = []
-        dog = Product(name="Dog", price=55.00)
-        dog.save()
-        inventory.append(dog)
+        self.assertEqual(payment_type.id, 1) 
 
-        product_list = admintasks.read_inventory(self)
-        self.assertIn("Dog", product_list)
             
     def test_user_can_add_product_to_customer_order(self):
-        inventory = []
-        dog = Product(name="Dog", price=55.00)
-        dog.save()
-        inventory.append(dog)
+        # read_inventory will query the database for the list of products and print them to the command line. Inventory is a list of dictionaries, storing the where the product name is the key and the product's price is the value
+        inventory = admintasks.read_inventory()
+        product = inventory[0]
+        # add_product_to_customer_order will add the product to the order table in the database 
+        admintasks.add_product_to_customer_order(product)
 
-        admintasks.activate_customer(self, self.gerald)
-        admintasks.add_product_to_customer_order(self, dog, self.order1)
-        self.assertEqual(self.order1.total, dog.price)
+        self.assertIsNotNone(inventory)
 
-    def test_user_can_complete_customer_order(self):
-        admintasks.select_order_payment_type(self, self.order1, self.visa.payment_type_id)
-        self.assertIsNotNone(self.order1.payment_type_id)
+
+
+    # def test_user_can_complete_customer_order(self):
+    #     admintasks.select_order_payment_type(self, self.order1, self.visa.payment_type_id)
+    #     self.assertIsNotNone(self.order1.payment_type_id)
 
 
 
