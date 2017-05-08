@@ -45,6 +45,8 @@ def get_active_customer():
         except TypeError:
             return None
 
+        conn.commit()
+
 
 
 def create_payment_type(self, payment_type_name, account_number, payment_type_id):
