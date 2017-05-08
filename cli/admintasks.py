@@ -59,7 +59,7 @@ def activate_customer(id):
         c = conn.cursor()
 
        
-        c.execute("""update Customer set Active = {} where CustomerID is {}""".format(0, id))
+        c.execute("""update Customer set Active = {} where CustomerID is {}""".format(1, id))
     
         conn.commit()
 
