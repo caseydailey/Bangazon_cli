@@ -7,7 +7,7 @@ class TestSweet(unittest.TestCase):
 
     def test_user_can_create_customer(self):
         # write_customer_to_database should return an id of the customer after writing to the database
-        admintasks.write_customer_to_database(name="Casey", address="123 Easy St", city="Coolville", state="TN", postal_code=1234, telephone=1232345678, active=1)
+        admintasks.write_customer_to_database(name="Casey", address="123 Easy St", city="Coolville", state="TN", postal_code=1234, telephone=1232345678, active=0)
         # the read_from_table takes the table name, the property to be read, and the row of the table to query
         saved_customer = admintasks.read_id_from_table(table_column='CustomerID', table_name='Customer', id_to_query=1)
 
@@ -19,11 +19,11 @@ class TestSweet(unittest.TestCase):
         # get_active_customer selects the customer id from the customer table where customer.active equals true
         active_customer = admintasks.get_active_customer()
 
-        self.assertEqual(4, active_customer)
+        self.assertEqual(8, active_customer)
 
     def test_user_can_add_payment_type_to_customer_account(self):
         # create_payment_type will insert into the payment type table the values from the user's input, the '1' in the assertion is referring to the customer id 
-        admintasks.create_payment_type(self, payment_type_name='Visa', account_number=123456, payment_type_id=1)
+        admintasks.create_payment_type(self, payment_type_name='Visa', account_number=123456, customer_id=1)
         payment_type = admintasks.get_payment_types(self, customer_id=1)
 
         self.assertEqual(payment_type, 1) 
