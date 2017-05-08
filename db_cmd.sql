@@ -25,8 +25,7 @@ CREATE TABLE Orders (
 	CustomerID INTEGER NOT NULL,
 	PaymentTypeID INTEGER NOT NULL,
 
-	FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
-	FOREIGN KEY (PaymentTypeID) REFERENCES PaymentType(PaymentTypeID)
+	FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
 );
 
 CREATE TABLE PaymentType (
