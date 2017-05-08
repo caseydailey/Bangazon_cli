@@ -51,7 +51,7 @@ def activate_customer(id):
     """
     Purpose: to set the boolean value of the selected customer to true
     Author: Harper Frankstone
-    Args: id - (integer) the customer id, used to indicate which customer to set as active 
+    Args: id - (integer) the customer id, used to indicate which customer to set as active
     Return: n/a
     """
     with sqlite3.connect('../db.db') as conn:
@@ -64,7 +64,7 @@ def activate_customer(id):
 
 def get_active_customer():
     """
-    Purpose: to show the active customer 
+    Purpose: to show the active customer
     Author: Harper Frankstone
     Args: n/a
     Return: the name of the active customer
@@ -74,7 +74,7 @@ def get_active_customer():
         c = conn.cursor()
 
         c.execute("""select CustomerID from Customer where Active is {} order by CustomerID desc""".format(1))
-      
+
         result = c.fetchone()
         try:
             if result != None:
@@ -87,26 +87,77 @@ def get_active_customer():
         conn.commit()
 
 
+def create_payment_type(self, payment_type_name, account_number, customer_id):
+    '''create_payment_type, author: Aaron Barfoot
+    Creates a new payment type in database and assign to active user
+    ----------------
+      payment_type_name -- (text) Name of payment type
+      account_number -- (integer) Account number for payment type
+      customer_id -- (integer) Customer ID of customer that added payment type
+    '''
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
 
-def create_payment_type(self, payment_type_name, account_number, payment_type_id):
+        c.execute("INSERT INTO PaymentType VALUES (?, ?, ?, ?)",
+            (None, payment_type_name, account_number, customer_id))
 
-    return 1
+        conn.commit()
 
 def get_payment_types(self, customer_id):
 
-    return 1 
+    return 1
 
 def read_inventory(self):
+    """ Query products, store as a list, and print to command line so customer can select a product to add to their order.
 
-    return ["Diapers"]
+    Arguments: None.
 
-def add_product_to_customer_order(self, product, customer_id):
+    Author: James Tonkin """
 
-    pass 
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
 
-def get_order(self, customer_id):
+        c.execute("SELECT ProductName FROM Product")
+        inventory = c.fetchall()
 
-    return "Diapers"
+        try:
+            if inventory != None:
+                return inventory
+            else:
+                raise TypeError
+        except TypeError:
+            return None
+
+def create_order(customer_id):
+    """ Creates a new order.
+
+    Arguments: customer_id that the order is for.
+
+    Author: James Tonkin """
+
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
+
+        c.execute("INSERT INTO Orders VALUES (?, ?, ?)",
+                    (None, customer_id, None ))
+
+        conn.commit()
+
+def add_product_to_customer_order(product_id, order_id):
+    """ Method to add products to a customer order.
+
+    Arguments: product_id that was ordered, order_id that is the product is being added to.
+
+    Author: James Tonkin """
+
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
+
+        c.execute("INSERT INTO ProductOrder VALUES (?, ?, ?)",
+                    (None, product_id, order_id))
+
+        conn.commit()
+        return c.lastrowid
 
 def assign_payment_type_to_customer_order(self, order_id, payment_id):
 
@@ -114,7 +165,7 @@ def assign_payment_type_to_customer_order(self, order_id, payment_id):
 
 def read_from_order_table(self, table_name, table_property, column_id):
 
-    return 1 
+    return 1
 
 def read_top_three_products(self):
     """
@@ -131,3 +182,4 @@ def read_top_three_products(self):
         print(c.fetchall())
 
         conn.commit()
+
