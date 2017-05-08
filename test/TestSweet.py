@@ -7,9 +7,9 @@ class TestSweet(unittest.TestCase):
 
     def test_user_can_create_customer(self):
         # write_customer_to_database should return an id of the customer after writing to the database
-        admintasks.write_customer_to_database(self, name="Casey", address="123 Easy St", city="Coolville", state="TN", postal_code=1234, telephone="123456")
+        admintasks.write_customer_to_database(name="Casey", address="123 Easy St", city="Coolville", state="TN", postal_code=1234, telephone=1232345678, active=1)
         # the read_from_table takes the table name, the property to be read, and the row of the table to query
-        saved_customer = admintasks.read_from_customer_table(self, table_name='customer', property='customer.id', id=1)
+        saved_customer = admintasks.read_id_from_table(table_column='CustomerID', table_name='Customer', id_to_query=1)
 
         self.assertEqual(1, saved_customer)
 
