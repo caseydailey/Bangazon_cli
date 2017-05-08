@@ -1,3 +1,5 @@
+import sqlite3
+
 def write_customer_to_database(self, name, address, city, state, postal_code, telephone):
 
     return 1 
@@ -14,9 +16,21 @@ def get_active_customer(self):
 
     return 1
 
-def create_payment_type(self, payment_type_name, account_number, payment_type_id):
+def create_payment_type(self, payment_type_name, account_number, customer_id):
+    '''create_payment_type, author: Aaron Barfoot
+    Creates a new payment type in database and assign to active user
+    ----------------
+      payment_type_name -- (text) Name of payment type
+      account_number -- (integer) Account number for payment type
+      customer_id -- (integer) Customer ID of customer that added payment type
+    '''
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
 
-    return 1
+        c.execute("INSERT INTO PaymentType VALUES (?, ?, ?, ?)",
+            (None, payment_type_name, account_number, customer_id))
+
+        conn.commit()
 
 def get_payment_types(self, customer_id):
 
