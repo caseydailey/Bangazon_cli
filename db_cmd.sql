@@ -17,13 +17,14 @@ CREATE TABLE Customer (
 	City TEXT NOT NULL,
 	State TEXT NOT NULL,
 	Zip INT NOT NULL,
-	Telephone INT NOT NULL
+	Telephone INT NOT NULL,
+	Active BIT NULL DEFAULT 0
 );
 
 CREATE TABLE Orders (
 	OrderID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	CustomerID INTEGER NOT NULL,
-	PaymentTypeID INTEGER NOT NULL,
+	PaymentTypeID INTEGER,
 
 	FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
 );
@@ -51,3 +52,4 @@ CREATE TABLE Product (
 	ProductName TEXT NOT NULL,
 	Product_Price INT NOT NULL
 );
+
