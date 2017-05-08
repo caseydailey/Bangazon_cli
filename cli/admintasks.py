@@ -58,7 +58,7 @@ def activate_customer(id):
         c = conn.cursor()
 
        
-        c.execute("""update Customer set Active = {} where CustomerID is {}""".format(0, id))
+        c.execute("""update Customer set Active = {} where CustomerID is {}""".format(1, id))
     
         conn.commit()
 
@@ -112,11 +112,21 @@ def assign_payment_type_to_customer_order(self, order_id, payment_id):
 
     pass
 
-def  read_from_order_table(self, table_name, table_property, column_id):
+def read_from_order_table(self, table_name, table_property, column_id):
 
     return 1 
 
 def read_top_three_products(self):
+    """
+    Purpose: to show the top three most purchased (popular) products 
+    Author: Harper Frankstone
+    Args: n/a
+    Return: a list containing strings of product names
+    """
 
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
+
+        
     return ['Diaper']
 
