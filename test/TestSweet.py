@@ -20,7 +20,7 @@ class TestSweet(unittest.TestCase):
         active_customer = admintasks.get_active_customer()
 
 
-        self.assertEqual(8, active_customer)
+        self.assertEqual(9, active_customer)
 
     def test_user_can_add_payment_type_to_customer_account(self):
         # create_payment_type will insert into the payment type table the values from the user's input, the '1' in the assertion is referring to the customer id
@@ -50,5 +50,5 @@ class TestSweet(unittest.TestCase):
 
     def test_user_can_see_product_popularity(self):
         top_products = admintasks.read_top_three_products(self)
-
+        print("from testsweet", top_products)
         self.assertIn('Diaper', top_products)
