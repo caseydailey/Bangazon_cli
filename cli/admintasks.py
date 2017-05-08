@@ -8,24 +8,22 @@ def read_from_customer_table(self, table_name, property, id):
 
     return 1 
 
-def activate_customer(self, id):
+def activate_customer(id):
     """
     Purpose: to set the boolean value of the selected customer to true
     Author: Harper Frankstone
     Args: id - (integer) the customer id, used to indicate which customer to set as active 
     Return: n/a
     """
-    with sqlite3.connect('db.db') as conn:
+    with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-        try:
-           c.execute("""insert into customer [(active)] where customer_id is {} values {}""".format(id, 1))
-        except sqlite3.OperationalError:
-           pass
-
+       
+        c.execute("""update Customer set Active = {} where CustomerID is {}""".format(0, id))
+    
         conn.commit()
 
-def get_active_customer(self):
+def get_active_customer():
     """
     Purpose: to show the active customer 
     Author: Harper Frankstone
@@ -33,11 +31,20 @@ def get_active_customer(self):
     Return: the name of the active customer
     """
 
-    with sqlite3.connect('db.db') as conn:
-      c = conn.cursor()
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
 
-      c.execute("select name from customer where active is {} order by customer_id desc limit 1".format(1))
-      print(c.fetchone())
+        c.execute("""select CustomerID from Customer where Active is {} order by CustomerID desc""".format(1))
+      
+        result = c.fetchone()
+        try:
+            if result != None:
+                return result[0]
+            else:
+                raise TypeError
+        except TypeError:
+            return None
+
 
 
 def create_payment_type(self, payment_type_name, account_number, payment_type_id):
@@ -73,3 +80,6 @@ def read_top_three_products(self):
     return ['Diaper']
 
 
+# if __name__ == '__main__':
+#     activate_customer(3)
+#     get_active_customer()

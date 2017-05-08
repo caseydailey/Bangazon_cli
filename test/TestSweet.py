@@ -15,11 +15,11 @@ class TestSweet(unittest.TestCase):
 
     def test_user_can_activate_customer(self):
         # we are passing an id into the activate_customer method, which should set the active property of the customer who's id equals the customer id passed, as an argument, to true
-        admintasks.activate_customer(self, id=1)
+        admintasks.activate_customer(id=1)
         # get_active_customer selects the customer id from the customer table where customer.active equals true
-        active_customer = admintasks.get_active_customer(self)
+        active_customer = admintasks.get_active_customer()
 
-        self.assertEqual(active_customer, 1)
+        self.assertEqual(4, active_customer)
 
     def test_user_can_add_payment_type_to_customer_account(self):
         # create_payment_type will insert into the payment type table the values from the user's input, the '1' in the assertion is referring to the customer id 
