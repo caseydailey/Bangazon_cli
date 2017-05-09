@@ -200,4 +200,5 @@ def read_top_three_products(self):
         return c.fetchall()
 
 if __name__ == '__main__':
-    
+    write_customer_to_database('Jimmy', '123 Nash St', 'Nash', 'TN', 12345, 67890, 0)
+    read_id_from_table
