@@ -21,17 +21,18 @@ def write_customer_to_database(name, address, city, state, postal_code, telephon
 
         conn.commit()
 
-# def get_customers():
-#     """purpose: get a list of customers
-#         author: casey dailey
-#         args: n/a
-#         return: list
-#     """
-#     with sqlite3.connect('../db.db') as conn:
-#         c = conn.cursor()
+def get_customer_list():
+    """purpose: get a list of customers
+        author: casey dailey
+        args: n/a
+        return: list
+    """
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
 
-#         c.execute("""select Customer.Name from Customer""")
+        c.execute("""select CustomerID, Name from Customer""")
 
+        return c.fetchall()
 
 def read_id_from_table(table_column, table_name, id_to_query):
     ''' read_id_from_table, author: Jordan Nelson
@@ -69,9 +70,22 @@ def activate_customer(id):
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-       
         c.execute("""update Customer set Active = {} where CustomerID is {}""".format(1, id))
     
+        conn.commit()
+
+def deactivate_customer(id):
+    '''deactivate_customer, author: Jordan Nelson
+    Sets the active flag to 0 (inactive) 
+    Method arguments
+    ----------------
+      id -- (int) The ID of the Customer to deactivate
+    '''
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
+
+        c.execute("""update Customer set Active = {} where CustomerID is {}""".format(0, id))
+
         conn.commit()
 
 def get_active_customer():
@@ -98,7 +112,6 @@ def get_active_customer():
 
         conn.commit()
 
-
 def create_payment_type(self, payment_type_name, account_number, customer_id):
     '''create_payment_type, author: Aaron Barfoot
     Creates a new payment type in database and assign to active user
@@ -114,7 +127,6 @@ def create_payment_type(self, payment_type_name, account_number, customer_id):
             (None, payment_type_name, account_number, customer_id))
 
         conn.commit()
-
 
 def get_payment_types(self, customer_id):
     ''' get_payment_types, author: Aaron Barfoot
@@ -136,7 +148,6 @@ def get_payment_types(self, customer_id):
                 raise TypeError
         except TypeError:
             return None
-
 
 def read_inventory(self):
     """ Query products, store as a list, and print to command line so customer can select a product to add to their order.
