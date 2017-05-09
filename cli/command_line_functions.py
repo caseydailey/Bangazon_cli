@@ -61,12 +61,17 @@ def create_payment_option_cli():
 	'''
 	active_customer = get_active_customer()
 
+	if active_customer == None:
+		print('You must select a customer to activate')
+		activate_a_customer_cli()
+
 	payment_type_name = input('Enter name of payment type:\n> ')
 	account_number = input('Enter account number for payment type:\n> ')
 	customer_id = active_customer
 
 	create_payment_type(payment_type_name, account_number, customer_id)
 	
+
 
 def add_product_to_cart_cli():
 	pass
