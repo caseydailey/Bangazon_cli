@@ -21,6 +21,18 @@ def write_customer_to_database(name, address, city, state, postal_code, telephon
 
         conn.commit()
 
+# def get_customers():
+#     """purpose: get a list of customers
+#         author: casey dailey
+#         args: n/a
+#         return: list
+#     """
+#     with sqlite3.connect('../db.db') as conn:
+#         c = conn.cursor()
+
+#         c.execute("""select Customer.Name from Customer""")
+
+
 def read_id_from_table(table_column, table_name, id_to_query):
     ''' read_id_from_table, author: Jordan Nelson
     Checks whether a specific ID exists in a table specified
@@ -103,9 +115,28 @@ def create_payment_type(self, payment_type_name, account_number, customer_id):
 
         conn.commit()
 
-def get_payment_types(self, customer_id):
 
-    return 1
+def get_payment_types(self, customer_id):
+    ''' get_payment_types, author: Aaron Barfoot
+    Returns the list of payment types assigned to the active user
+    ----------------
+      customer_id -- (integer) CustomerId to match with PaymentType.CutomerId
+    '''
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
+
+        c.execute("""SELECT * FROM PaymentType WHERE {} = PaymentType.CustomerID"""
+            .format(customer_id))
+
+        paymenttypes = c.fetchall()
+        try:
+            if paymenttypes != None:
+                return paymenttypes
+            else:
+                raise TypeError
+        except TypeError:
+            return None
+
 
 def read_inventory(self):
     """ Query products, store as a list, and print to command line so customer can select a product to add to their order.
@@ -143,6 +174,23 @@ def create_order(customer_id):
 
         conn.commit()
 
+def get_customer_open_order(customer_id):
+    """Purpose: query the database for a customer's open order
+       Args: customer_id = a foreign key to the orders table
+       Returns: the id of the order with 
+    """
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
+
+        c.execute("""select OrderID
+                    from Orders 
+                    where CustomerID = {}
+                    and Orders.PaymentTypeID = null""".format(customer_id))
+
+        customer_open_order = c.fetchone()
+
+        return customer_open_order
+
 def add_product_to_customer_order(product_id, order_id):
     """ Method to add products to a customer order.
 
@@ -159,13 +207,23 @@ def add_product_to_customer_order(product_id, order_id):
         conn.commit()
         return c.lastrowid
 
-def assign_payment_type_to_customer_order(self, order_id, payment_id):
+def assign_payment_type_to_customer_order(order_id, payment_id):
+    """Purpose: assigning a payment type to a customer's order will 'complete' the order
+    Author: Casey Dailey
+    Args: order_id=an integer, foreign key to the payment_type table specifies the order to be updated, 
+          payment_id=the value corresponding to a customer's particular payment type
+    Returns: N/A
+    """
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
 
-    pass
+    c.execute("""update Orders 
+                 set PaymentTypeID = {} 
+                 where Orders.OrderID={};""".format(payment_id, order_id))
 
-def  read_from_order_table(self, table_name, table_property, column_id):
+    conn.commit()
 
-    return 1
+    return c.lastrowid
 
 def read_top_three_products(self):
 
