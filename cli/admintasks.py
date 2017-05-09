@@ -241,8 +241,4 @@ def read_top_three_products(self):
 
 
 
-if __name__ == "__main__":
 
-    activate_customer(1)
-    add_product_to_customer_order(1, 1)
-    assign_payment_type_to_customer_order(1, 1)
