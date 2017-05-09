@@ -225,7 +225,7 @@ def assign_payment_type_to_customer_order(order_id, payment_id):
 
     return c.lastrowid
 
-def read_top_three_products(self):
+def read_top_three_products():
     """
     Purpose: to show the top three most purchased (popular) products 
     Author: Harper Frankstone
@@ -236,9 +236,15 @@ def read_top_three_products(self):
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-        c.execute("""select Product.ProductName as Name, Count(ProductOrder.ProductOrderID) as Purchased FROM ProductOrder, Product WHERE Product.ProductID = ProductOrder.ProductID GROUP BY Product.ProductName ORDER BY Purchased desc limit 3""")
-        return c.fetchall()
+        c.execute("""SELECT Product.ProductName as Name, 
+                    Count(ProductOrder.ProductOrderID) as Purchased 
+                    FROM ProductOrder, Product 
+                    WHERE Product.ProductID = ProductOrder.ProductID 
+                    GROUP BY Product.ProductName 
+                    ORDER BY Purchased desc limit 3""")
+        top_three = c.fetchall()
+        return top_three
 
-
-
+if __name__ == '__main__':
+    print(read_top_three_products())
 
