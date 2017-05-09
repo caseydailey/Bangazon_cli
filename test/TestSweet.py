@@ -19,9 +19,10 @@ class TestSweet(unittest.TestCase):
         # get_active_customer selects the customer id from the customer table where customer.active equals true
         active_customer = admintasks.get_active_customer()
 
-        self.assertEqual(8, active_customer)
+        self.assertEqual(1, active_customer)
 
     def test_user_can_add_payment_type_to_customer_account(self):
+
         # create_payment_type will insert into the payment type table the values from the user's input, the '1' in the assertion is referring to the customer id 
         # admintasks.create_payment_type(self, payment_type_name='Visa', account_number=123456, customer_id=1)
         payment_type = admintasks.get_payment_types(self, customer_id=1)
@@ -35,15 +36,6 @@ class TestSweet(unittest.TestCase):
 
 
         self.assertIsNotNone(productorder)
-
-
-    def test_user_can_complete_customer_order(self):
-        # within this method, the order table will be updated with a payment type id, signalling its completion. The method should accept, as arguments, an order id and a payment type id
-        admintasks.assign_payment_type_to_customer_order(self, order_id=1, payment_id=1)
-        # the general read_from_table method will accept a table name, a column id that we want to reference and a property as arguments, using those arguments to pass into the database query
-        completed_order = admintasks.read_from_order_table(self, table_name='order', table_property='order.payment_type_id', column_id=1)
-
-        self.assertEqual(completed_order, 1)
 
 
     def test_user_can_see_product_popularity(self):
