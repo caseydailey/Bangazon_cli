@@ -105,8 +105,25 @@ def create_payment_type(self, payment_type_name, account_number, customer_id):
         conn.commit()
 
 def get_payment_types(self, customer_id):
+    ''' get_payment_types, author: Aaron Barfoot
+    Returns the list of payment types assigned to the active user
+    ----------------
+      customer_id -- (integer) CustomerId to match with PaymentType.CutomerId
+    '''
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
 
-    return 1 
+        c.execute("""SELECT * FROM PaymentType WHERE {} = PaymentType.CustomerID"""
+            .format(customer_id))
+
+        paymenttypes = c.fetchall()
+        try:
+            if paymenttypes != None:
+                return paymenttypes
+            else:
+                raise TypeError
+        except TypeError:
+            return None
 
 def read_inventory(self):
 
