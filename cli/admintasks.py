@@ -179,7 +179,7 @@ def read_top_three_products(self):
         c = conn.cursor()
 
         c.execute("""select Product.ProductName as Name, Count(ProductOrder.ProductOrderID) as Purchased FROM ProductOrder, Product WHERE Product.ProductID = ProductOrder.ProductID GROUP BY Product.ProductName ORDER BY Purchased desc limit 3""")
-        print(c.fetchall())
+        return c.fetchall()
 
-        conn.commit()
-
+if __name__ == '__main__':
+    

@@ -49,6 +49,8 @@ class TestSweet(unittest.TestCase):
 
 
     def test_user_can_see_product_popularity(self):
+        # this method queries the database for the most frequently purchased products from the ProductOrder table
         top_products = admintasks.read_top_three_products(self)
-        print("from testsweet", top_products)
-        self.assertIn('Diaper', top_products)
+
+
+        self.assertIn('Diapers', top_products[0])
