@@ -71,7 +71,7 @@ def activate_customer(id):
         c = conn.cursor()
 
         c.execute("""update Customer set Active = {} where CustomerID is {}""".format(1, id))
-
+    
         conn.commit()
 
 def deactivate_customer(id):
@@ -236,6 +236,23 @@ def assign_payment_type_to_customer_order(order_id, payment_id):
 
     return c.lastrowid
 
-def read_top_three_products(self):
+def read_top_three_products():
+    """
+    Purpose: to show the top three most purchased (popular) products 
+    Author: Harper Frankstone
+    Args: n/a
+    Return: a list containing strings of product names
+    """
 
-    return ['Diaper']
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
+
+        c.execute("""SELECT Product.ProductName as Name, 
+                    Count(ProductOrder.ProductOrderID) as Purchased 
+                    FROM ProductOrder, Product 
+                    WHERE Product.ProductID = ProductOrder.ProductID 
+                    GROUP BY Product.ProductName 
+                    ORDER BY Purchased desc limit 3""")
+        top_three = c.fetchall()
+        return top_three
+
