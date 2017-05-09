@@ -245,6 +245,3 @@ def read_top_three_products():
         top_three = c.fetchall()
         return top_three
 
-if __name__ == '__main__':
-    print(read_top_three_products())
-
