@@ -1,6 +1,23 @@
 from admintasks import *
 from command_line_functions import *
 
+p = 0
+def deactivate_on_startup():
+	'''deactivate_on_startup, author: Jordan Nelson
+    If a Customer is marked active on the initial program
+    run, deactivate the customer
+    Method arguments
+    ----------------
+	None
+    '''
+	global p
+	if p == 0:
+		active_customer = get_active_customer()
+
+		if active_customer != None:
+ 			deactivate_customer(active_customer)
+		p += 1
+
 def build_menu():
 	'''build_menu, author: Jordan Nelson
     Displays the initial menu to the user
@@ -55,5 +72,5 @@ def start_program_menu():
 		start_program_menu()
 
 if __name__ == '__main__':
-
+	deactivate_on_startup()
 	start_program_menu()

@@ -78,8 +78,6 @@ def create_payment_option_cli():
 	customer_id = active_customer
 
 	create_payment_type(payment_type_name, account_number, customer_id)
-	
-
 
 def add_product_to_cart_cli():
 	pass
