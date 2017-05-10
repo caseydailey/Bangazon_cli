@@ -110,8 +110,6 @@ def get_active_customer():
         except TypeError:
             return None
 
-        conn.commit()
-
 def create_payment_type(self, payment_type_name, account_number, customer_id):
     '''create_payment_type, author: Aaron Barfoot
     Creates a new payment type in database and assign to active user
