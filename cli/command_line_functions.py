@@ -6,6 +6,7 @@ def create_customer_cli():
 	'''create_customer_cli, author: Jordan Nelson
     Allows the user to input a customer's information which
     is then written to the database
+    Method arguments
     ----------------
 	None
     '''
@@ -22,11 +23,14 @@ def activate_customer_cli():
 	'''active_customer_cli, author: Jordan Nelson
 	Calls the get_active_customer method. If anything other than 'None' is returned
 	the user recieves a message that a customer is already active in the system.
+	Method arguments
     ----------------
 	None
     '''
 	active_customer = get_active_customer()
 
+	'''If a Customer is already active, deactivate the current customer
+	then present the menu'''
 	if active_customer == None:
 		activate_a_customer_cli()
 	else:
@@ -37,25 +41,44 @@ def activate_a_customer_cli():
 	'''activate_a_customer_cli, author: Jordan Nelson
 	Presents the user with a list of all customers, by choosing the number of the
 	customer, the specific customer is marked as active.
+	Method arguments
     ----------------
 	None
     '''
 	print('Which customer will be active?\n')
 
 	customers =  get_customer_list()
-	for custid, name in customers:
-		print(str(custid) + '. ' + name)
+
+	i = 1
+	for index in range(len(customers)):
+		print(str(i) + '. ' + str(customers[index][1]))
+		i += 1
 
 	user_input = input('> ')
-	user_input = int(user_input)
+	user_input = int(user_input) - 1
 
-	for custid, name in customers:
-		if user_input == custid:
-			activate_customer(user_input)
-			break
+	try:
+		activate_customer(customers[user_input][0])
+	except:
+		print('Please choose a Customer from the list.')
 
 def create_payment_option_cli():
-	pass
+	'''create_payment_option_cli, author: Aaron Barfoot
+	Allows user to add a payment type to their account and writes input to database
+	-----------------
+	None
+	'''
+	active_customer = get_active_customer()
+
+	if active_customer == None:
+		print('You must select a customer to activate')
+		activate_a_customer_cli()
+
+	payment_type_name = input('Enter name of payment type:\n> ')
+	account_number = input('Enter account number for payment type:\n> ')
+	customer_id = active_customer
+
+	create_payment_type(payment_type_name, account_number, customer_id)
 
 def add_product_to_cart_cli():
 	""" Gets active customer, then checks to see if customer has an open order. If no open order then will open a new order. Once an order is found or opened, pulls inventory of items and shows them to the user. User will select items to add to the shopping cart.
