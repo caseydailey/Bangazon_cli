@@ -5,6 +5,7 @@ def create_customer_cli():
 	'''create_customer_cli, author: Jordan Nelson
     Allows the user to input a customer's information which
     is then written to the database
+    Method arguments
     ----------------
 	None
     '''
@@ -21,11 +22,14 @@ def activate_customer_cli():
 	'''active_customer_cli, author: Jordan Nelson
 	Calls the get_active_customer method. If anything other than 'None' is returned
 	the user recieves a message that a customer is already active in the system.
+	Method arguments
     ----------------
 	None
     '''
 	active_customer = get_active_customer()
 
+	'''If a Customer is already active, deactivate the current customer
+	then present the menu'''
 	if active_customer == None:
 		activate_a_customer_cli()
 	else:
@@ -36,22 +40,26 @@ def activate_a_customer_cli():
 	'''activate_a_customer_cli, author: Jordan Nelson
 	Presents the user with a list of all customers, by choosing the number of the
 	customer, the specific customer is marked as active.
+	Method arguments
     ----------------
 	None
     '''
 	print('Which customer will be active?\n')
 
 	customers =  get_customer_list()
-	for custid, name in customers:
-		print(str(custid) + '. ' + name)
+
+	i = 1
+	for index in range(len(customers)):
+		print(str(i) + '. ' + str(customers[index][1]))
+		i += 1
 
 	user_input = input('> ')
-	user_input = int(user_input)
+	user_input = int(user_input) - 1
 
-	for custid, name in customers:
-		if user_input == custid:
-			activate_customer(user_input)
-			break
+	try:
+		activate_customer(customers[user_input][0])
+	except:
+		print('Please choose a Customer from the list.')
 
 def create_payment_option_cli():
 	'''create_payment_option_cli, author: Aaron Barfoot
