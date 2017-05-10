@@ -51,8 +51,8 @@ def start_program_menu():
 	if choice == '7':
 		quit()
 
-	else:
-		start_program_menu()
+
+	start_program_menu()
 
 if __name__ == '__main__':
 

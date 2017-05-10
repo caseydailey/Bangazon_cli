@@ -1,5 +1,6 @@
 from admintasks import *
 from command_line_functions import *
+from run import *
 
 def create_customer_cli():
 	'''create_customer_cli, author: Jordan Nelson
@@ -57,7 +58,42 @@ def create_payment_option_cli():
 	pass
 
 def add_product_to_cart_cli():
-	pass
+	""" Gets active customer, then checks to see if customer has an open order. If no open order then will open a new order. Once an order is found or opened, pulls inventory of items and shows them to the user. User will select items to add to the shopping cart.
+	Arguments: None
+	Author: James Tonkin
+	"""
+
+	active_customer = get_active_customer()
+
+	if active_customer is None:
+		print("Please select an active customer!")
+		return
+
+	active_customer_open_order_index = get_customer_open_order(active_customer)
+
+	if active_customer_open_order_index is None:
+		active_customer_open_order = create_order(active_customer)
+	else:
+		active_customer_open_order = active_customer_open_order_index[0]
+
+	inventory = read_inventory()
+	i = 0
+	for prodid, prodname in inventory:
+		i += 1
+		print("{}. {}".format(i, prodname))
+	print("{}. Done adding products".format(i + 1))
+
+	user_input = input('> ')
+	if int(user_input) < i + 1:
+		selected_product_index = int(user_input) - 1
+
+		selected_product = inventory[selected_product_index]
+		product_id = selected_product[0]
+
+		add_product_to_customer_order(product_id, active_customer_open_order)
+		add_product_to_cart_cli()
+	else:
+		pass
 
 def complete_order_cli():
 	pass

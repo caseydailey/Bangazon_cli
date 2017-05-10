@@ -71,12 +71,12 @@ def activate_customer(id):
         c = conn.cursor()
 
         c.execute("""update Customer set Active = {} where CustomerID is {}""".format(1, id))
-    
+
         conn.commit()
 
 def deactivate_customer(id):
     '''deactivate_customer, author: Jordan Nelson
-    Sets the active flag to 0 (inactive) 
+    Sets the active flag to 0 (inactive)
     Method arguments
     ----------------
       id -- (int) The ID of the Customer to deactivate
@@ -149,7 +149,7 @@ def get_payment_types(self, customer_id):
         except TypeError:
             return None
 
-def read_inventory(self):
+def read_inventory():
     """ Query products, store as a list, and print to command line so customer can select a product to add to their order.
 
     Arguments: None.
@@ -159,7 +159,7 @@ def read_inventory(self):
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-        c.execute("SELECT ProductName FROM Product")
+        c.execute("SELECT ProductID, ProductName FROM Product")
         inventory = c.fetchall()
 
         try:
@@ -185,18 +185,20 @@ def create_order(customer_id):
 
         conn.commit()
 
+        return c.lastrowid
+
 def get_customer_open_order(customer_id):
     """Purpose: query the database for a customer's open order
        Args: customer_id = a foreign key to the orders table
-       Returns: the id of the order with 
+       Returns: the id of the order with
     """
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
         c.execute("""select OrderID
-                    from Orders 
+                    from Orders
                     where CustomerID = {}
-                    and Orders.PaymentTypeID = null""".format(customer_id))
+                    and Orders.PaymentTypeID is null""".format(customer_id))
 
         customer_open_order = c.fetchone()
 
@@ -216,20 +218,19 @@ def add_product_to_customer_order(product_id, order_id):
                     (None, product_id, order_id))
 
         conn.commit()
-        return c.lastrowid
 
 def assign_payment_type_to_customer_order(order_id, payment_id):
     """Purpose: assigning a payment type to a customer's order will 'complete' the order
     Author: Casey Dailey
-    Args: order_id=an integer, foreign key to the payment_type table specifies the order to be updated, 
+    Args: order_id=an integer, foreign key to the payment_type table specifies the order to be updated,
           payment_id=the value corresponding to a customer's particular payment type
     Returns: N/A
     """
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-    c.execute("""update Orders 
-                 set PaymentTypeID = {} 
+    c.execute("""update Orders
+                 set PaymentTypeID = {}
                  where Orders.OrderID={};""".format(payment_id, order_id))
 
     conn.commit()
@@ -238,7 +239,7 @@ def assign_payment_type_to_customer_order(order_id, payment_id):
 
 def read_top_three_products():
     """
-    Purpose: to show the top three most purchased (popular) products 
+    Purpose: to show the top three most purchased (popular) products
     Author: Harper Frankstone
     Args: n/a
     Return: a list containing strings of product names
@@ -247,12 +248,11 @@ def read_top_three_products():
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-        c.execute("""SELECT Product.ProductName as Name, 
-                    Count(ProductOrder.ProductOrderID) as Purchased 
-                    FROM ProductOrder, Product 
-                    WHERE Product.ProductID = ProductOrder.ProductID 
-                    GROUP BY Product.ProductName 
+        c.execute("""SELECT Product.ProductName as Name,
+                    Count(ProductOrder.ProductOrderID) as Purchased
+                    FROM ProductOrder, Product
+                    WHERE Product.ProductID = ProductOrder.ProductID
+                    GROUP BY Product.ProductName
                     ORDER BY Purchased desc limit 3""")
         top_three = c.fetchall()
         return top_three
-
