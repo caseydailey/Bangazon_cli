@@ -28,7 +28,7 @@ class TestSweet(unittest.TestCase):
         # admintasks.create_payment_type(self, payment_type_name='Visa', account_number=123456, customer_id=1)
         payment_type = admintasks.get_payment_types(self, customer_id=1)
 
-        self.assertIn((1, 'Visa', 123456, 1), payment_type) 
+        self.assertIn((1, 'Visa', 123456, 1), payment_type)
 
 
     def test_user_can_add_product_to_customer_order(self):
