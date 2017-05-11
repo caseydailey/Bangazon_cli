@@ -11,22 +11,6 @@ from command_line_functions import *
 
 """
 
-p = 0
-def deactivate_on_startup():
-	"""
-    purpose: ensure that previous active customer is de-activated at run-time  
-    author: Jordan Nelson
-    args: n/a
-    returns: n/a
-    """
-	global p
-	if p == 0:
-		active_customer = get_active_customer()
-
-		if active_customer != None:
- 			deactivate_customer(active_customer)
-		p += 1
-
 def build_menu():
     """
     purpose: Displays the initial menu to the user   
@@ -74,11 +58,12 @@ def start_program_menu():
         product_popularity_cli()
 
     if choice == '7':
+        active_customer = get_active_customer()
+        deactivate_customer(active_customer)
         quit()
 
     start_program_menu()
 
 if __name__ == '__main__':
-	deactivate_on_startup()
 	start_program_menu()
 
