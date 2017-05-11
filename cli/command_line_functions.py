@@ -80,8 +80,8 @@ def create_payment_option_cli():
     if len(payment_type_name) < 1 or len(account_number) < 1:
         print("Please enter correct information.")
         pass
-   `
-        create_payment_type(payment_type_name, account_number, customer_id)
+    if len(payment_type_name) > 1 and len(account_number) > 1:
+    	create_payment_type(payment_type_name, account_number, customer_id)
 
 def add_product_to_cart_cli():
     """ Gets active customer, then checks to see if customer has an open order. If no open order then will open a new order. Once an order is found or opened, pulls inventory of items and shows them to the user. User will select items to add to the shopping cart.
