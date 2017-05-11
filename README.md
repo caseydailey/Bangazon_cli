@@ -1,7 +1,7 @@
 # Bangazon CLI
 
 ## The Command Line Ordering System
-In this group project, you will be allowing a user to interact with a basic product ordering database.
+This project is a basic command line ordering system for Bangazon LLC.
 
 
 ## Getting Started
@@ -40,6 +40,7 @@ In your terminal, you should see something like this:
 ## Built With
 * [Python](http://www.dropwizard.io/1.0.2/docs/) - Main Language
 * [pip](https://maven.apache.org/) - Dependency Management
+* [sqlite](https://www.sqlite.org/) - Database Management System
 
 
 ## Authors
