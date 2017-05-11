@@ -70,7 +70,6 @@ def start_program_menu():
 
     start_program_menu()
 
-
 if __name__ == '__main__':
 	deactivate_on_startup()
 	start_program_menu()

@@ -27,7 +27,7 @@ class TestSweet(unittest.TestCase):
         # create_payment_type will insert into the payment type table the values from the user's input, the '1' in the assertion is referring to the customer id 
         # admintasks.create_payment_type(self, payment_type_name='Visa', account_number=123456, customer_id=1)
         payment_type = admintasks.get_payment_types(self, customer_id=3)
-
+        
         self.assertIn((1, 'Visa', 1111222233334444, 3), payment_type) 
 
 

@@ -262,11 +262,14 @@ def read_top_three_products():
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-        c.execute("""SELECT Product.ProductName as Name,
-                    Count(ProductOrder.ProductOrderID) as Purchased
-                    FROM ProductOrder, Product
+        c.execute("""SELECT Product.ProductName as Name, 
+                    Count(Distinct ProductOrder.ProductOrderID) as Purchased, 
+                    Count(Distinct Orders.CustomerID) as Orders, 
+                    Sum(Product.ProductPrice) as Revenue
+                    FROM ProductOrder, Product, Orders
                     WHERE Product.ProductID = ProductOrder.ProductID
-                    GROUP BY Product.ProductName
+                    AND Orders.OrderID = ProductOrder.OrderID
+                    GROUP BY Product.ProductName 
                     ORDER BY Purchased desc limit 3""")
 
         top_three = c.fetchall()

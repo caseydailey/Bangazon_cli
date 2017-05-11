@@ -173,7 +173,55 @@ def complete_order_cli():
             if last_input != None:
                     return
 
-
 def product_popularity_cli():
-    pass
+	"""Purpose: to show a table in the command line interface with the top three most popular products.
+		Author: Harper Frankstone
+		Requirements: 
+		1)product column should be 18 characters long, and a max of 17 characters of the name should be shown
+		2)the orders column should be 11 characters long
+		3)the customers column should be 11 characters long
+		4)the revenue column should be 15 characters long
+		Args: None
+	"""
+	print('Product           Orders     Customers  Revenue        ')
+	print('*******************************************************')
+	top_three_products = read_top_three_products()
+	# print(top_three_products)
+	# I need to loop over the collection returned from read_top_three_products and take the strings of the product names, store in a variable. I should use the [] notation to select the first, second, and third products 
+	# find a repeat method in python like the ng-repeat
+	# do math to count the number of characters in a row in a column then subtract that length from the set number of characters allowed for the column
+	total_products = 0
+	total_orders = 0 
+	total_customers = 0
+	total_revenue = 0 
+	for each in top_three_products:
+		popular_product_character_count = len(each[0])
+		order_count = len(str(each[1]))
+		customer_count = len(str(each[2]))
+		revenue_count = len(str(each[3]))
+
+		product_column_spaces = 18 - popular_product_character_count
+		order_column_spaces = 11 - order_count
+		customer_column_spaces = 11 - customer_count
+		revenue_column_spaces = 15 - revenue_count
+
+		s = ' ' * product_column_spaces
+		o = ' ' * order_column_spaces
+		c = ' ' * customer_column_spaces
+		r = ' ' * revenue_column_spaces
+
+		number_of_orders = str(each[1]) 
+		customer_number = str(each[2])
+		revenue_number = str(each[3])
+
+		print(each[0] + s + number_of_orders + o + customer_number + r + revenue_number)
+		total_orders += each[1]
+		total_customers += each[2]
+		total_revenue += each[3]
+		
+	print('*******************************************************')
+	print('Totals:           ' + str(total_orders) + '          ' + str(total_customers) + '             ' + '$' + str(total_revenue))
+	print('')
+	input('-> press return go back to the main menu')
+
 
