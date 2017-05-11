@@ -2,14 +2,30 @@ from admintasks import *
 from command_line_functions import *
 from run import *
 
+"""
+    ************** command_line_functions *****************
+    This module serves as an intermediary relay between run.py and admintasks.py
+    providing the methods to run.py that respond to the user's interaction with the 
+    system and calling admintasks as needed. 
+
+    methods: 
+                create_customer_cli
+                activate_customer_cli
+                create_payment_option_cli
+                add_product_to_cart_cli
+                complete_order_cli
+                product_popularity_cli
+
+"""
+
 def create_customer_cli():
-    '''create_customer_cli, author: Jordan Nelson
-    Allows the user to input a customer's information which
-    is then written to the database
-    Method arguments
-    ----------------
-    None
-    '''
+    """
+    purpose: allow user to create a new customer account
+    author: Jordan Nelson
+    args: n/a
+    returns: n/a
+    helper methods: write_customer_to_database() from admintasks
+    """
     name = input('Enter customer name:\n> ')
     address = input('Enter street address:\n> ')
     city = input('Enter city:\n> ')
@@ -20,17 +36,17 @@ def create_customer_cli():
     write_customer_to_database(name, address, city, state, postal_code, phone_number, active=0)
 
 def activate_customer_cli():
-    '''active_customer_cli, author: Jordan Nelson
-    Calls the get_active_customer method. If anything other than 'None' is returned
-    the user recieves a message that a customer is already active in the system.
-    Method arguments
-    ----------------
-    None
-    '''
+    """
+    purpose: check if customer is active or not and activate or not accordingly
+    author: Jordan Nelson
+    args: n/a
+    returns: n/a
+    helpers: get_active_customer, activate_a_customer_cli, deactivate_customer
+    """
     active_customer = get_active_customer()
 
-    '''If a Customer is already active, deactivate the current customer
-    then present the menu'''
+    """If a Customer is already active, deactivate the current customer
+    then present the menu"""
     if active_customer == None:
         activate_a_customer_cli()
     else:
@@ -38,13 +54,13 @@ def activate_customer_cli():
         activate_a_customer_cli()
 
 def activate_a_customer_cli():
-    '''activate_a_customer_cli, author: Jordan Nelson
-    Presents the user with a list of all customers, by choosing the number of the
-    customer, the specific customer is marked as active.
-    Method arguments
-    ----------------
-    None
-    '''
+    """
+    purpose: allow user to activate a customer 
+    author: Jordan Nelson
+    args: n/a
+    returns: n/a
+    helpers: get_customer_list, activate_customer
+    """
     print('Which customer will be active?\n')
 
     customers =  get_customer_list()
@@ -63,11 +79,13 @@ def activate_a_customer_cli():
         print('Please choose a Customer from the list.')
 
 def create_payment_option_cli():
-    '''create_payment_option_cli, author: Aaron Barfoot
-    Allows user to add a payment type to their account and writes input to database
-    -----------------
-    None
-    '''
+    """
+    purpose: allow user to add a payment type to a customer account
+    author: Aaron Barfoot
+    args: n/a
+    returns: n/a
+    helpers: get_active_customer, create_payment_type
+    """
     active_customer = get_active_customer()
 
     if active_customer == None:
@@ -81,11 +99,21 @@ def create_payment_option_cli():
     create_payment_type(payment_type_name, account_number, customer_id)
 
 def add_product_to_cart_cli():
-    """ Gets active customer, then checks to see if customer has an open order. If no open order then will open a new order. Once an order is found or opened, pulls inventory of items and shows them to the user. User will select items to add to the shopping cart.
-    Arguments: None
-    Author: James Tonkin
+    """ 
+    purpose: allow user to add a product to an open order
+    author: James Tonkin
+    args: n/a
+    returns: n/a
+    helpers: 
+    ---------------
+        get_active_customer
+        get_customer_open_order
+        create_order
+        read_inventory
+        add_product_to_customer_order
+    ---------------
     """
-
+    #check for active customer
     active_customer = get_active_customer()
 
     if active_customer is None:
@@ -93,11 +121,18 @@ def add_product_to_cart_cli():
         return
     active_customer_open_order_index = get_customer_open_order(active_customer)
 
+    #if no order, create one
     if active_customer_open_order_index is None:
         active_customer_open_order = create_order(active_customer)
     else:
         active_customer_open_order = active_customer_open_order_index[0]
 
+    #present user with a list of products
+    # 1. candy
+    # 2. cigs
+    # 3. coffee
+    # where the number corresponds to the products index in inventory + 1 (i + 1)
+    # this creates a relationship between the user's input and the product's ID
     inventory = read_inventory()
     i = 0
     for prodid, prodname in inventory:
@@ -105,6 +140,7 @@ def add_product_to_cart_cli():
         print("{}. {}".format(i, prodname))
     print("{}. Done adding products".format(i + 1))
 
+    #the user's input - 1 corresponds to the items index in inventory
     user_input = input('> ')
     if int(user_input) < i + 1:
         selected_product_index = int(user_input) - 1
@@ -118,10 +154,20 @@ def add_product_to_cart_cli():
         pass 
 
 def complete_order_cli():
-    """purpose: apply the user's chosen payment type to the active customer's open order
-       author: casey dailey
-       args: n/a
-       returns: n/a
+    """
+    purpose: apply payment type to active customer's open order
+    author: casey dailey
+    args: n/a
+    returns: n/a
+    helpers: 
+    -----------------
+        get_active_customer
+        get_customer_open_order
+        activate_a_customer_cli
+        get_customer_order_total
+        get_payment_types
+        assign_payment_type_to_customer_order
+    -----------------
     """
     #in order to apply a payment type to a customer's order, 
     #we need a customer_id and the order_id of that customer's open order
@@ -174,54 +220,73 @@ def complete_order_cli():
                     return
 
 def product_popularity_cli():
-	"""Purpose: to show a table in the command line interface with the top three most popular products.
-		Author: Harper Frankstone
-		Requirements: 
-		1)product column should be 18 characters long, and a max of 17 characters of the name should be shown
-		2)the orders column should be 11 characters long
-		3)the customers column should be 11 characters long
-		4)the revenue column should be 15 characters long
-		Args: None
-	"""
-	print('Product           Orders     Customers  Revenue        ')
-	print('*******************************************************')
-	top_three_products = read_top_three_products()
-	# print(top_three_products)
-	# I need to loop over the collection returned from read_top_three_products and take the strings of the product names, store in a variable. I should use the [] notation to select the first, second, and third products 
-	# find a repeat method in python like the ng-repeat
-	# do math to count the number of characters in a row in a column then subtract that length from the set number of characters allowed for the column
-	total_products = 0
-	total_orders = 0 
-	total_customers = 0
-	total_revenue = 0 
-	for each in top_three_products:
-		popular_product_character_count = len(each[0])
-		order_count = len(str(each[1]))
-		customer_count = len(str(each[2]))
-		revenue_count = len(str(each[3]))
+    """
+    purpose: show top three products
+    author: Harper Frankstone
+    args: n/a
+    returns: n/a
+    helpers: read_top_three_products
+    prints a report that looks like this: 
 
-		product_column_spaces = 18 - popular_product_character_count
-		order_column_spaces = 11 - order_count
-		customer_column_spaces = 11 - customer_count
-		revenue_column_spaces = 15 - revenue_count
+        Product           Orders     Customers  Revenue
+    *******************************************************
+    Coffee            7          2             28
+    Cigs              5          2             50
+    Mug               4          2             20
+    *******************************************************
+    Totals:           16          6             $98
 
-		s = ' ' * product_column_spaces
-		o = ' ' * order_column_spaces
-		c = ' ' * customer_column_spaces
-		r = ' ' * revenue_column_spaces
+    """
+    print('Product           Orders     Customers  Revenue        ')
+    print('*******************************************************')
 
-		number_of_orders = str(each[1]) 
-		customer_number = str(each[2])
-		revenue_number = str(each[3])
+    top_three_products = read_top_three_products()
 
-		print(each[0] + s + number_of_orders + o + customer_number + r + revenue_number)
-		total_orders += each[1]
-		total_customers += each[2]
-		total_revenue += each[3]
-		
-	print('*******************************************************')
-	print('Totals:           ' + str(total_orders) + '          ' + str(total_customers) + '             ' + '$' + str(total_revenue))
-	print('')
-	input('-> press return go back to the main menu')
+    # initalize variables for item data 
+    total_products = 0
+    total_orders = 0 
+    total_customers = 0
+    total_revenue = 0 
+
+    # top_three_products = [('Coffee', 7, 2, 28), ('Cigs', 5, 2, 50), ('Mug', 4, 2, 20)]
+    # count the number of characters in
+    # name of product
+    # how many times ordered
+    # how many customers ordered product
+    # total sales for product 
+    for each in top_three_products:
+        popular_product_character_count = len(each[0])
+        order_count = len(str(each[1]))
+        customer_count = len(str(each[2]))
+        revenue_count = len(str(each[3]))
+
+       #how many spaces to print to meet report format specifications
+        product_column_spaces = 18 - popular_product_character_count
+        order_column_spaces = 11 - order_count
+        customer_column_spaces = 11 - customer_count
+        revenue_column_spaces = 15 - revenue_count
+
+        #vars for number of spaces to meet report format specifications
+        s = ' ' * product_column_spaces
+        o = ' ' * order_column_spaces
+        c = ' ' * customer_column_spaces
+        r = ' ' * revenue_column_spaces
+
+        #convert integers to strings to make command line happy
+        number_of_orders = str(each[1]) 
+        customer_number = str(each[2])
+        revenue_number = str(each[3])
+
+        #print product_name + product_spaces, number_of_orders + order_spaces, revenue_spaces + revenue_number (amount) 
+        print(each[0] + s + number_of_orders + o + customer_number + r + revenue_number)
+        #gather orders, customers, and revenue totals for display below
+        total_orders += each[1]
+        total_customers += each[2]
+        total_revenue += each[3]
+        
+    print('*******************************************************')
+    print('Totals:           ' + str(total_orders) + '          ' + str(total_customers) + '             ' + '$' + str(total_revenue))
+    print('')
+    input('-> press return go back to the main menu')
 
 

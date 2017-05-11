@@ -1,15 +1,24 @@
 from admintasks import *
 from command_line_functions import *
 
+""" 
+    ************ run.py ********
+
+    This Module serves as an interface between admintasks, command_line_functions, and the CLI
+    It's purpose is to handle the user's interaction with the system by displaying menu options,
+    gather the user's input and respond accordingly, 
+    calling the necessary methods in the command_line_functions methods.
+
+"""
+
 p = 0
 def deactivate_on_startup():
-	'''deactivate_on_startup, author: Jordan Nelson
-    If a Customer is marked active on the initial program
-    run, deactivate the customer
-    Method arguments
-    ----------------
-	None
-    '''
+	"""
+    purpose: ensure that previous active customer is de-activated at run-time  
+    author: Jordan Nelson
+    args: n/a
+    returns: n/a
+    """
 	global p
 	if p == 0:
 		active_customer = get_active_customer()
@@ -19,12 +28,12 @@ def deactivate_on_startup():
 		p += 1
 
 def build_menu():
-    '''build_menu, author: Jordan Nelson
-    Displays the initial menu to the user
-    Method arguments
-    ----------------
-    None
-    '''
+    """
+    purpose: Displays the initial menu to the user   
+    author: Jordan Nelson
+    args: n/a
+    returns: n/a
+    """
     print('*********************************************************')
     print('**  Welcome to Bangazon! Command Line Ordering System  **')
     print('*********************************************************')
@@ -37,13 +46,12 @@ def build_menu():
     print('7. Leave Bangazon!')
 
 def start_program_menu():
-    '''start_program_menu, author: Jordan Nelson
-    Allows the user to select an option which calls
-    the specific method
-    Method arguments
-    ----------------
-    None
-    '''
+    """
+    purpose: Allows the user to select an option which calls 
+    author: Jordan Nelson
+    args: n/a
+    returns: n/a
+    """
     build_menu()
     choice = input('> ')
 
