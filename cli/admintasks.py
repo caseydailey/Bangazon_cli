@@ -93,9 +93,8 @@ def get_active_customer():
     Purpose: to show the active customer
     Author: Harper Frankstone
     Args: n/a
-    Return: the name of the active customer
+    Return: the customerID of the active customer
     """
-
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
@@ -126,7 +125,7 @@ def create_payment_type(payment_type_name, account_number, customer_id):
 
         conn.commit()
 
-def get_payment_types(self, customer_id):
+def get_payment_types(customer_id):
     ''' get_payment_types, author: Aaron Barfoot
     Returns the list of payment types assigned to the active user
     ----------------
@@ -170,10 +169,9 @@ def read_inventory():
 
 def create_order(customer_id):
     """ Creates a new order.
-
-    Arguments: customer_id that the order is for.
-
-    Author: James Tonkin """
+        Arguments: customer_id that the order is for.
+        returns: id of order created
+        Author: James Tonkin """
 
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
@@ -182,31 +180,50 @@ def create_order(customer_id):
                     (None, customer_id, None ))
 
         conn.commit()
-
         return c.lastrowid
 
 def get_customer_open_order(customer_id):
     """Purpose: query the database for a customer's open order
+       Author: Casey Dailey
        Args: customer_id = a foreign key to the orders table
-       Returns: the id of the order with
+       Returns: (tuple) containing OrderID 
     """
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
         c.execute("""select OrderID
-                    from Orders
-                    where CustomerID = {}
-                    and Orders.PaymentTypeID is null""".format(customer_id))
+                     from Orders 
+                     where CustomerID = {}
+                     and PaymentTypeID is null""".format(customer_id))
 
         customer_open_order = c.fetchone()
-
         return customer_open_order
+
+def get_customer_order_total(customer_id):
+    """ purpose: return the total price of customer's order
+        args: customer_id = (int) specifies customer
+        returns: customer_order_total = sum of all product prices in customer's order
+    """
+    #get customer's open order id
+    customer_open_order = get_customer_open_order(customer_id)
+    customer_open_order_id = customer_open_order[0]
+
+    #get sum of all products' prices on order
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
+
+        c.execute("""select sum(Product.ProductPrice)
+                               from ProductOrder, Product
+                               where ProductOrder.OrderID = {}
+                               and Product.ProductID = ProductOrder.ProductID""".format(customer_open_order_id))
+    
+    order_total = c.fetchone()
+    return order_total[0]
+
 
 def add_product_to_customer_order(product_id, order_id):
     """ Method to add products to a customer order.
-
     Arguments: product_id that was ordered, order_id that is the product is being added to.
-
     Author: James Tonkin """
 
     with sqlite3.connect('../db.db') as conn:
@@ -219,20 +236,19 @@ def add_product_to_customer_order(product_id, order_id):
 
 def assign_payment_type_to_customer_order(order_id, payment_id):
     """Purpose: assigning a payment type to a customer's order will 'complete' the order
-    Author: Casey Dailey
-    Args: order_id=an integer, foreign key to the payment_type table specifies the order to be updated,
-          payment_id=the value corresponding to a customer's particular payment type
-    Returns: N/A
+       Author: Casey Dailey
+       Args: order_id (int) foreign key to the payment_type table specifies the order to be updated,
+             payment_id (int) the value corresponding to a customer's particular payment type
+       Returns: N/A
     """
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-    c.execute("""update Orders
-                 set PaymentTypeID = {}
-                 where Orders.OrderID={};""".format(payment_id, order_id))
+    c.execute("""update Orders 
+                 set PaymentTypeID = {} 
+                 where OrderID = {}""".format(payment_id, order_id[0]))
 
     conn.commit()
-
     return c.lastrowid
 
 def read_top_three_products():
@@ -252,5 +268,6 @@ def read_top_three_products():
                     WHERE Product.ProductID = ProductOrder.ProductID
                     GROUP BY Product.ProductName
                     ORDER BY Purchased desc limit 3""")
+
         top_three = c.fetchall()
         return top_three
