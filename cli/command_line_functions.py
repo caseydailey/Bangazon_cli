@@ -138,6 +138,8 @@ def complete_order_cli():
     customer_id = get_active_customer()
     try:
         open_order_id = get_customer_open_order(customer_id)
+        if open_order_id is None:
+            create_order(customer_id)
     except:
         print('Please activate a Customer.')
         pass
