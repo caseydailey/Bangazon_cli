@@ -34,7 +34,7 @@ cd cli
 python run.py
 ```
 In your terminal, you should see something like this:
-![cli menu screen shot](images/cli_menu.png)
+![cli menu screen shot](/images/cli_menu.png)
 
 
 ## Built With
