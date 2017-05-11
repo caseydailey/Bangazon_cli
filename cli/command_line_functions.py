@@ -80,7 +80,7 @@ def create_payment_option_cli():
     if len(payment_type_name) < 1 or len(account_number) < 1:
         print("Please enter correct information.")
         pass
-    if len(payment_type_name) and len(account_number) > 1:
+   `
         create_payment_type(payment_type_name, account_number, customer_id)
 
 def add_product_to_cart_cli():
