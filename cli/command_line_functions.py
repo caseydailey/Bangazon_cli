@@ -136,7 +136,11 @@ def complete_order_cli():
     #in order to apply a payment type to a customer's order,
     #we need a customer_id and the order_id of that customer's open order
     customer_id = get_active_customer()
-    open_order_id = get_customer_open_order(customer_id)
+    try:
+        open_order_id = get_customer_open_order(customer_id)
+    except:
+        print('Please activate a Customer.')
+        pass
 
     #check for active customer. if none, prompt user to activate a customer.
     if customer_id == None:
