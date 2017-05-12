@@ -1,6 +1,7 @@
 from admintasks import *
 from command_line_functions import *
 from run import *
+import readchar
 
 """
     ************** command_line_functions *****************
@@ -200,8 +201,10 @@ def complete_order_cli():
         total = get_customer_order_total(customer_id)
 
         if total is None:
-            input("Please add some products to your order first. Press any key to return to main menu. >")
-            return
+            print("Please add some products to your order first. Press any key to return to main menu. >")
+            key = readchar.readkey()
+            if key:
+                wqreturn
 
         print("Your order total is ${}.00. Ready to purchase?".format(total))
         choice = input("Y/N >")
@@ -236,9 +239,9 @@ def complete_order_cli():
                     assign_payment_type_to_customer_order(open_order_id, selected_payment_type_id)
 
                     print("Your order is complete! Press any key to return to main menu.")
-                    last_input = input(">")
-                    if last_input != None:
-                            return
+                    key = readchar.readkey()
+                    if key:
+                        return
                 except:
                     print("Please enter one of the numerical selections above.")
                     complete_order_cli()
@@ -314,7 +317,10 @@ def product_popularity_cli():
     print('*******************************************************')
     print('Totals:           ' + str(total_orders) + '          ' + str(total_customers) + '             ' + '$' + str(total_revenue))
     print('')
-    input('-> press return go back to the main menu')
+    print('-> press any key go back to the main menu')
+    key = readchar.readkey()
+    if key:
+        return
 
 
 
