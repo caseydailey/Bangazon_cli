@@ -21,13 +21,11 @@ class TestSweet(unittest.TestCase):
         top_products = admintasks.read_top_three_products()
         self.assertIn('Coffee', top_products[0])
 
-# Please add an option in the menu titled "View customer order" that, when selected, will display any items that the customer has ordered, but not purchased yet (if any).
-
     def test_user_can_see_order_contents(self):
         """
         this test will test the contents of an order, and needs to test all components of the application that come prior to 
         """
-        # the customer must be created before an order is 
+        # the customer must be created before an order is created 
         saved_customer = admintasks.read_id_from_table(table_column='CustomerID', table_name='Customer', id_to_query=1)
 
         self.assertEqual(1, saved_customer)
@@ -46,3 +44,25 @@ class TestSweet(unittest.TestCase):
         order_contents = admintasks.read_order_contents(order_id=8)
 
         self.assertIn('Coffee', order_contents[0])
+
+
+    def test_user_can_add_product_seller(self):
+        """
+         this admin interface must allow a customer service person to create a new product and specify the active customer as the seller.
+        """
+        # the customer must be created before products can be added 
+        saved_customer = admintasks.read_id_from_table(table_column='CustomerID', table_name='Customer', id_to_query=1)
+
+        self.assertEqual(1, saved_customer)
+
+        # the customer must then be made active before the user can add products in to be sold
+        admintasks.activate_customer(id=1)
+        active_customer = admintasks.get_active_customer()
+
+        self.assertEqual(1, active_customer)
+
+        # now that the customer is active, the user needs to be able to update the product table in the database with a new product that has a new column named product seller that will hold the active customer's id
+        admintasks.add_product_as_sellable(active_customer_id=1, product_name='Pencil', product_price=3)
+        product_list = admintasks.read_inventory()
+
+        self.assertIn((6, 'Pencil'), product_list)

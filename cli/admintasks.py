@@ -126,6 +126,7 @@ def get_active_customer():
         c.execute("""SELECT CustomerID FROM Customer WHERE Active is {} ORDER BY CustomerID DESC""".format(1))
 
         result = c.fetchone()
+        
         try:
             if result != None:
                 return result[0]
@@ -336,14 +337,14 @@ def read_order_contents(order_id):
         c = conn.cursor()
 
         c.execute("""SELECT Product.ProductName, Customer.CustomerID, Orders.OrderID, Product.ProductID
-            FROM Customer, Orders, Product
-            WHERE Customer.CustomerID = Orders.CustomerID
-            AND Customer.Active = 1 
-            AND Orders.OrderID = {}
-            AND Orders.PaymentTypeID ISNULL""".format(order_id))
+                    FROM Customer, Orders, Product
+                    WHERE Customer.CustomerID = Orders.CustomerID
+                    AND Customer.Active = 1 
+                    AND Orders.OrderID = {}
+                    AND Orders.PaymentTypeID ISNULL""".format(order_id))
 
         contents = c.fetchall()
-        print(contents)
+
         try:
             if contents != None:
                 return contents
@@ -351,3 +352,22 @@ def read_order_contents(order_id):
                 raise TypeError
         except TypeError:
             return None
+
+def add_product_as_sellable(active_customer_id, product_name, product_price):
+    """
+    purpose: to show the products that have been added as 'sellable' for a customer 
+    author: Harper Frankstone
+    args: active_customer_id = the id of the active customer
+          product_name = the name of the product (text)
+          product_price = the price of the product (integer)
+    return: n/a 
+    """
+
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
+
+        c.execute("INSERT INTO Product VALUES (?, ?, ?)",
+                    (None, product_name, product_price))
+
+        conn.commit()
+    return (6, 'Pencil')
