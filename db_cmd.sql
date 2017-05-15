@@ -51,6 +51,6 @@ CREATE TABLE Product (
 	ProductID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	ProductName TEXT NOT NULL,
 	ProductPrice INTEGER NOT NULL,
-	ProductSeller TEXT NOT NULL
+	ProductSeller INTEGER
 );
 
