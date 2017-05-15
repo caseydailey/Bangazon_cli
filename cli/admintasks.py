@@ -53,7 +53,7 @@ def get_customer_list():
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-        c.execute("""select CustomerID, Name from Customer""")
+        c.execute("""SELECT CustomerID, Name FROM Customer""")
 
         return c.fetchall()
 
@@ -95,7 +95,7 @@ def activate_customer(id):
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-        c.execute("""update Customer set Active = {} where CustomerID is {}""".format(1, id))
+        c.execute("""UPDATE Customer SET Active = {} WHERE CustomerID is {}""".format(1, id))
 
         conn.commit()
 
@@ -109,7 +109,7 @@ def deactivate_customer(id):
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-        c.execute("""update Customer set Active = {} where CustomerID is {}""".format(0, id))
+        c.execute("""UPDATE Customer SET Active = {} WHERE CustomerID is {}""".format(0, id))
 
         conn.commit()
 
@@ -123,7 +123,7 @@ def get_active_customer():
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-        c.execute("""select CustomerID from Customer where Active is {} order by CustomerID desc""".format(1))
+        c.execute("""SELECT CustomerID FROM Customer WHERE Active is {} ORDER BY CustomerID DESC""".format(1))
 
         result = c.fetchone()
         try:
@@ -231,10 +231,10 @@ def get_customer_open_order(customer_id):
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-        c.execute("""select OrderID
-                     from Orders 
-                     where CustomerID = {}
-                     and PaymentTypeID is null""".format(customer_id))
+        c.execute("""SELECT OrderID
+                     FROM Orders 
+                     WHERE CustomerID = {}
+                     AND PaymentTypeID is NULL""".format(customer_id))
 
         customer_open_order = c.fetchone()
         return customer_open_order
@@ -254,10 +254,10 @@ def get_customer_order_total(customer_id):
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-        c.execute("""select sum(Product.ProductPrice)
-                               from ProductOrder, Product
-                               where ProductOrder.OrderID = {}
-                               and Product.ProductID = ProductOrder.ProductID""".format(customer_open_order_id))
+        c.execute("""SELECT sum(Product.ProductPrice)
+                               FROM ProductOrder, Product
+                               WHERE ProductOrder.OrderID = {}
+                               AND Product.ProductID = ProductOrder.ProductID""".format(customer_open_order_id))
     
     order_total = c.fetchone()
     return order_total[0]
@@ -291,9 +291,9 @@ def assign_payment_type_to_customer_order(order_id, payment_id):
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-    c.execute("""update Orders 
-                 set PaymentTypeID = {} 
-                 where OrderID = {}""".format(payment_id, order_id[0]))
+    c.execute("""UPDATE Orders 
+                 SET PaymentTypeID = {} 
+                 WHERE OrderID = {}""".format(payment_id, order_id[0]))
 
     conn.commit()
     
@@ -322,3 +322,31 @@ def read_top_three_products():
 
         top_three = c.fetchall()
         return top_three
+
+def read_order_contents():
+    """
+    purpose: to show the products in a customer's uncompleted order
+    author: Harper Frankstone
+    args: n/a
+    return: list of tuples 
+        ex: [('Coffee', 7, 2, 28)]
+        where: [(product_name (string), the active customer's id, order_id)]
+    """
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
+
+        c.execute("""SELECT Product.ProductName, Orders.OrderID, Product.ProductID
+            FROM Customer, Orders, Product
+            WHERE Customer.CustomerID = Orders.CustomerID
+            AND Customer.Active = 1 
+            AND Orders.PaymentTypeID ISNULL""")
+
+        contents = c.fetchall()
+        print(contents[0])
+        try:
+            if contents != None:
+                return contents
+            else:
+                raise TypeError
+        except TypeError:
+            return None
