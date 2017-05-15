@@ -18,6 +18,8 @@ import sqlite3
                 add_product_to_customer_order
                 assign_payment_type_to_customer_order
                 read_top_three_products
+                view_customer_current_order
+                create_product_sold_by_customer
 """
 def write_customer_to_database(name, address, city, state, postal_code, telephone, active):
     """
@@ -322,3 +324,50 @@ def read_top_three_products():
 
         top_three = c.fetchall()
         return top_three
+
+def view_customer_current_order(customer_id):
+    """
+    purpose: creates a query which returns a customer's products on an uncompleted order.
+    author: Jordan Nelson
+    args: n/a
+    returns: n/a
+    helpers: n/a
+    """
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
+
+        c.execute("""
+            SELECT ProductName, count(*) as Qty
+            FROM Product, Orders, ProductOrder
+            WHERE Orders.CustomerID is {}
+            AND Orders.PaymentTypeID is NULL
+            AND Orders.OrderID = ProductOrder.OrderID
+            AND ProductOrder.ProductID = Product.ProductID
+            GROUP BY ProductName
+            ORDER BY Qty DESC""".format(customer_id))
+
+        customer_shopping_cart = c.fetchall()
+
+        return customer_shopping_cart
+
+def create_product_sold_by_customer(product_name, product_price, product_seller):
+    """
+    purpose: Creates a new product in the database
+    author: Jordan Nelson
+    args:
+    ----------------
+      ProductName -- (text) Product Name
+      ProductPrice -- (integer) Price of Product
+      ProductSeller -- (integer) Null values are system entered products,
+      where-as each other integer should respond to a customer id.
+    ----------------
+    returns: n/a
+    """
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
+
+        c.execute("INSERT INTO Product VALUES (?, ?, ?, ?)",
+            (None, product_name, product_price, product_seller))
+
+        conn.commit()
+

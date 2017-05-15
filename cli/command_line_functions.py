@@ -1,6 +1,4 @@
 from admintasks import *
-from command_line_functions import *
-from run import *
 
 """
     ************** command_line_functions *****************
@@ -8,15 +6,32 @@ from run import *
     providing the methods to run.py that respond to the user's interaction with the 
     system and calling admintasks as needed. 
 
-    methods: 
+    methods:
+                deactivate_customer_on_program_start_cli
                 create_customer_cli
                 activate_customer_cli
                 create_payment_option_cli
                 add_product_to_cart_cli
                 complete_order_cli
                 product_popularity_cli
+                view_customer_current_order_cli
+                create_product_sold_by_customer_cli
 
 """
+
+def deactivate_customer_on_program_start_cli():
+    """
+    purpose: deactivate customer in case the program is interrupted
+    and an active customer is still in the database
+    author: Jordan Nelson
+    args: n/a
+    returns: n/a
+    helper methods: get_active_customer(), deactivate_customer() from admintasks
+    """
+    active_customer = get_active_customer()
+
+    if active_customer != None:
+        deactivate_customer(active_customer)
 
 def create_customer_cli():
     """
@@ -26,6 +41,14 @@ def create_customer_cli():
     returns: n/a
     helper methods: write_customer_to_database() from admintasks
     """
+
+    active_customer = get_active_customer()
+
+    """If a Customer is already active, deactivate the current customer
+    then present the menu"""
+    if active_customer != None:
+        deactivate_customer(active_customer)
+
     name = input('Enter customer name:\n> ')
     address = input('Enter street address:\n> ')
     city = input('Enter city:\n> ')
@@ -316,5 +339,72 @@ def product_popularity_cli():
     print('')
     input('-> press return go back to the main menu')
 
+def view_customer_current_order_cli():
+    """
+    purpose: allow user to view the active customer's products on an
+    order which has not been completed
+    author: Jordan Nelson
+    args: n/a
+    returns: n/a
+    helpers: get_active_customer, view_customer_current_order
+    """
+    active_customer = get_active_customer()
 
+    if active_customer == None:
+        print('You must activate a customer')
+        activate_a_customer_cli()
+        return
+    
+    shopping_cart = view_customer_current_order(active_customer)
+    if shopping_cart:
+        for product, qty in shopping_cart:
+            print('Product: {} Qty: {}'.format(product, qty))
+        input('Press return to go back to the main menu')
+    else:
+        print('You have no products in your shopping cart.')
+        input('Press return to go back to the main menu')
 
+def create_product_sold_by_customer_cli():
+    """
+    purpose: Allows the user to create a product 
+    author: Jordan Nelson
+    args: n/a
+    returns: n/a
+    helpers: get_active_customer, create_product_sold_by_customer
+    """
+    active_customer = get_active_customer()
+
+    if active_customer != None:
+        print('Create a Product sold by CustomerID {}'.format(active_customer))
+
+        while True:
+            try:
+                product_name = input('Enter a Product Name:\n> ')
+                if len(product_name) < 1:
+                    raise
+            except:
+                print('Enter a Product Name:\n> ')
+            else:
+                break;
+
+        while True:
+            try:
+                product_price = int(input('Enter a Product Price (Without $):\n> '))
+                if product_price < 1 or product_price == 0:
+                    raise
+            except:
+                print('Please enter a Product Price')
+            else:
+                break;
+
+        try:
+            print('Adding Product "{}" with the Price ${} by CustomerID {}'.format(product_name, product_price, active_customer))
+            create_product_sold_by_customer(product_name, product_price, active_customer)
+        except:
+            print('Error Creating Product')
+
+    elif active_customer == None:
+        print('You must select a customer to activate')
+        activate_a_customer_cli()
+    else:
+        print('Unhelpful Error')
