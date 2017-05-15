@@ -323,26 +323,27 @@ def read_top_three_products():
         top_three = c.fetchall()
         return top_three
 
-def read_order_contents():
+def read_order_contents(order_id):
     """
     purpose: to show the products in a customer's uncompleted order
     author: Harper Frankstone
     args: n/a
     return: list of tuples 
         ex: [('Coffee', 7, 2, 28)]
-        where: [(product_name (string), the active customer's id, order_id)]
+        where: [(product_name (string), the active customer's id, order_id, the product id)]
     """
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-        c.execute("""SELECT Product.ProductName, Orders.OrderID, Product.ProductID
+        c.execute("""SELECT Product.ProductName, Customer.CustomerID, Orders.OrderID, Product.ProductID
             FROM Customer, Orders, Product
             WHERE Customer.CustomerID = Orders.CustomerID
             AND Customer.Active = 1 
-            AND Orders.PaymentTypeID ISNULL""")
+            AND Orders.OrderID = {}
+            AND Orders.PaymentTypeID ISNULL""".format(order_id))
 
         contents = c.fetchall()
-        print(contents[0])
+        print(contents)
         try:
             if contents != None:
                 return contents

@@ -43,6 +43,6 @@ class TestSweet(unittest.TestCase):
         admintasks.add_product_to_customer_order(product_id=1, order_id=1)
 
         # now that a product has been added to an order, a method is required to read the tuple or list of tuples that comes back from the sql query
-        order_contents = admintasks.read_order_contents()
+        order_contents = admintasks.read_order_contents(order_id=8)
 
         self.assertIn('Coffee', order_contents[0])
