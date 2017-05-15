@@ -350,7 +350,7 @@ def view_customer_current_order(customer_id):
 
         return customer_shopping_cart
 
-def create_product_sold_by_customer(product_name, product_price, product_seller):
+def create_product_sold_by_customer(product_name, product_price, customer_id):
     """
     purpose: Creates a new product in the database
     author: Jordan Nelson
@@ -367,7 +367,7 @@ def create_product_sold_by_customer(product_name, product_price, product_seller)
         c = conn.cursor()
 
         c.execute("INSERT INTO Product VALUES (?, ?, ?, ?)",
-            (None, product_name, product_price, product_seller))
+            (None, product_name, product_price, customer_id))
 
         conn.commit()
 

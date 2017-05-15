@@ -51,6 +51,8 @@ CREATE TABLE Product (
 	ProductID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	ProductName TEXT NOT NULL,
 	ProductPrice INTEGER NOT NULL,
-	ProductSeller INTEGER
+	CustomerID INTEGER,
+
+	FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
 );
 
