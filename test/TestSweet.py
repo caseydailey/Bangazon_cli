@@ -12,11 +12,12 @@ class TestSweet(unittest.TestCase):
         admintasks.activate_customer(id=1)
         active_customer = admintasks.get_active_customer()
         self.assertEqual(1, active_customer)
+        admintasks.deactivate_customer(id=1)
 
     def test_user_can_add_payment_type_to_customer_account(self):
-        payment_type = admintasks.get_payment_types(customer_id=3)
-        self.assertIn((1, 'Visa', 1111222233334444, 3), payment_type) 
+        payment_type = admintasks.get_payment_types(customer_id=1)
+        self.assertIn((1, 'Discover', 12345678853, 1), payment_type) 
 
     def test_user_can_see_product_popularity(self):
         top_products = admintasks.read_top_three_products()
-        self.assertIn('Coffee', top_products[0])
+        self.assertIn('Car', top_products[0])
