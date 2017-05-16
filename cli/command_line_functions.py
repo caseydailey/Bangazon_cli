@@ -318,3 +318,27 @@ def product_popularity_cli():
 
 
 
+def order_contents_cli():
+    """
+    purpose: show the contents of a customer's open order
+    author: Harper Frankstone
+    args: n/a
+    returns: n/a
+    helpers: get_active_customer, get_customer_open_order, read_order_contents
+    """
+    # the code will break if the user tries to see the order contents when the order is empty
+    # I'm not sure how to catch that error
+    customer_id = get_active_customer()
+    open_order_id = get_customer_open_order(customer_id)
+
+    contents = read_order_contents(open_order_id[0])
+
+    content_name = []
+    for each in contents:
+        content_name.append(each[0])
+    print('Products in Shopping Cart:')
+    print('----------------------------')
+    i = 0
+    for prodname in content_name:
+        i += 1
+        print("{}. {}".format(i, prodname))

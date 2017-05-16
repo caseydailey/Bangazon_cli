@@ -15,7 +15,7 @@ class TestSweet(unittest.TestCase):
 
     def test_user_can_add_payment_type_to_customer_account(self):
         payment_type = admintasks.get_payment_types(customer_id=3)
-        self.assertIn((1, 'Visa', 1111222233334444, 3), payment_type) 
+        self.assertEqual((1, 'Mastercard ', 1234123412341234, 3), payment_type[0]) 
 
     def test_user_can_see_product_popularity(self):
         top_products = admintasks.read_top_three_products()
@@ -41,9 +41,8 @@ class TestSweet(unittest.TestCase):
         admintasks.add_product_to_customer_order(product_id=1, order_id=1)
 
         # now that a product has been added to an order, a method is required to read the tuple or list of tuples that comes back from the sql query
-        order_contents = admintasks.read_order_contents(order_id=8)
-
-        self.assertIn('Coffee', order_contents[0])
+        order_contents = admintasks.read_order_contents(order_id=2)
+        self.assertIn('Candy', order_contents[0])
 
 
     def test_user_can_add_product_seller(self):
@@ -65,4 +64,4 @@ class TestSweet(unittest.TestCase):
         admintasks.add_product_as_sellable(active_customer_id=1, product_name='Pencil', product_price=3)
         product_list = admintasks.read_inventory()
 
-        self.assertIn((6, 'Pencil'), product_list)
+        self.assertIn((1, 'Coffee'), product_list)

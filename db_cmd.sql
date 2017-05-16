@@ -50,6 +50,9 @@ CREATE TABLE ProductOrder (
 CREATE TABLE Product (
 	ProductID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	ProductName TEXT NOT NULL,
-	ProductPrice INTEGER NOT NULL
+	ProductPrice INTEGER NOT NULL,
+	ActiveCustomerID INTEGER NOT NULL
+
+	FOREIGN KEY (ActiveCustomerID) REFERENCES Customer(CustomerID)
 );
 

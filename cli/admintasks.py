@@ -239,6 +239,8 @@ def get_customer_open_order(customer_id):
 
         customer_open_order = c.fetchone()
         return customer_open_order
+        
+
 
 def get_customer_order_total(customer_id):
     """ 
@@ -336,12 +338,14 @@ def read_order_contents(order_id):
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-        c.execute("""SELECT Product.ProductName, Customer.CustomerID, Orders.OrderID, Product.ProductID
-                    FROM Customer, Orders, Product
-                    WHERE Customer.CustomerID = Orders.CustomerID
-                    AND Customer.Active = 1 
+        c.execute("""SELECT Product.ProductName, Orders.OrderID, ProductOrder.ProductID
+                    FROM Customer, Orders, ProductOrder, Product
+                    WHERE Orders.OrderID = ProductOrder.OrderID
+                    AND Product.ProductID = ProductOrder.ProductID
+                    AND Customer.CustomerID = Orders.CustomerID
                     AND Orders.OrderID = {}
-                    AND Orders.PaymentTypeID ISNULL""".format(order_id))
+                    AND Orders.PaymentTypeID ISNULL
+                    ORDER BY Product.ProductID""".format(order_id))
 
         contents = c.fetchall()
 
@@ -366,8 +370,7 @@ def add_product_as_sellable(active_customer_id, product_name, product_price):
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-        c.execute("INSERT INTO Product VALUES (?, ?, ?)",
-                    (None, product_name, product_price))
+        c.execute("INSERT INTO Product VALUES (?, ?, ?, ?)",
+                    (None, product_name, product_price, active_customer_id))
 
         conn.commit()
-    return (6, 'Pencil')
