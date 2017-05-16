@@ -16,6 +16,7 @@ import sqlite3
                 read_inventory
                 create_order
                 add_product_to_customer_order
+                view_products_in_customer_open_order
                 assign_payment_type_to_customer_order
                 read_top_three_products
 """

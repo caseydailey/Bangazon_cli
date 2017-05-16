@@ -15,6 +15,7 @@ from run import *
                 add_product_to_cart_cli
                 complete_order_cli
                 product_popularity_cli
+                view_cart_cli
 
 """
 
@@ -162,6 +163,48 @@ def add_product_to_cart_cli():
         print("Please enter one of the numerical selections above.")
         add_product_to_cart_cli()
 
+def view_cart_cli():
+    """
+    purpose: view items in a customer's cart
+    author: casey dailey
+    args: n/a
+    returns: n/a
+    helpers: get_active_customer
+    """
+    active_customer = get_active_customer()
+    #check if there's an active customer
+    if active_customer:
+        try:
+            cart_info = view_products_in_customer_open_order(active_customer)
+            cart_items = cart_info[0]
+            item_names = [item[0] for item in cart_items]
+            print("item in cart for customer {}: \n".format(active_customer))
+            for index, item in enumerate(item_names):
+                print("{}: {}".format(index + 1, item))
+            print('Would you like to complete you order? y/n')
+            answer = input('>')
+            if answer == 'y':
+                complete_order_cli()
+            elif answer == 'n':
+                return
+            else: 
+                print('please enter y or n')
+
+        #check if there's an order
+        except: 
+            print('There are no items in your cart. would you like to create an order? y/n')
+            response = input('>')
+            if response == 'y':
+                add_product_to_cart_cli()
+            elif response == 'n':
+                return
+            else: 
+                print('please enter y or n')
+
+    else:
+        print('please activate a customer')
+        activate_customer_cli()
+
 def complete_order_cli():
     """
     purpose: apply payment type to active customer's open order
@@ -183,7 +226,7 @@ def complete_order_cli():
     customer_id = get_active_customer()
     try:
         open_order_id = get_customer_open_order(customer_id)
-        if open_order_id is None:
+        if not open_order_id:
             create_order(customer_id)
     except:
         print('Please activate a Customer.')

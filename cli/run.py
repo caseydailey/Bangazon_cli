@@ -25,9 +25,10 @@ def build_menu():
     print('2. Choose active customer')
     print('3. Create a payment option')
     print('4. Add product to shopping cart')
-    print('5. Complete an order')
-    print('6. See product popularity')
-    print('7. Leave Bangazon!')
+    print('5. View Cart')
+    print('6. Complete an order')
+    print('7. See product popularity')
+    print('8. Leave Bangazon!')
 
 def start_program_menu():
     """
@@ -52,12 +53,15 @@ def start_program_menu():
         add_product_to_cart_cli()
 
     if choice == '5':
-        complete_order_cli()
+        view_cart_cli()
 
     if choice == '6':
-        product_popularity_cli()
+        complete_order_cli()
 
     if choice == '7':
+        product_popularity_cli()
+
+    if choice == '8':
         active_customer = get_active_customer()
         deactivate_customer(active_customer)
         quit()
