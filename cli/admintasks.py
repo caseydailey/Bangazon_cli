@@ -345,3 +345,24 @@ def view_active_customer_open_order(customer_id):
 
         customer_open_order_view = c.fetchall()
         return customer_open_order_view
+
+def user_can_add_product(product_name, product_price, customer_id):
+    """
+    purpose: Creates a new product in the database
+    author: James Tonkin
+    args:
+    ----------------
+      product_name -- (text) The Product's Name
+      product_price -- (integer) The Products's Price
+      customer_id -- (integer) The Customer's ID
+    ----------------
+    returns: n/a
+    """
+
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
+
+        c.execute("INSERT INTO Product VALUES (?, ?, ?, ?)",
+            (None, product_name, product_price, customer_id))
+
+        conn.commit()

@@ -317,11 +317,33 @@ def product_popularity_cli():
     input('-> press return go back to the main menu')
 
 def view_active_customer_open_order_cli():
+    """
+    purpose: show products in the current active customer's open order
+    author: James Tonkin
+    args: n/a
+    returns: n/a
+    helpers: get_active_customer
+             view_active_customer_open_order
+    """
 
     customer_id = get_active_customer()
     open_order_view = view_active_customer_open_order(customer_id)
 
-    i = 0
-    for products in open_order_view:
-        i += 1
-        print('{}. {}'.format(i, products[0]))
+    for index, products in enumerate(open_order_view):
+        print('{}. {}'.format(index + 1, products[0]))
+
+def user_can_add_product_cli():
+    """
+    purpose: allow user to create a new product
+    author: James Tonkin
+    args: n/a
+    returns: n/a
+    helper methods: user_can_add_product() from admintasks
+    """
+
+    customer_id = get_active_customer()
+
+    product_name = input('Enter product name:\n> ')
+    product_price = input('Enter product price:\n> ')
+
+    user_can_add_product(product_name, product_price, customer_id)

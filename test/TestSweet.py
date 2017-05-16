@@ -28,3 +28,7 @@ class TestSweet(unittest.TestCase):
         admintasks.add_product_to_customer_order(1, open_order[0])
         open_order_products = admintasks.view_active_customer_open_order(active_customer)
         self.assertIn('Coffee', open_order_products[5])
+
+    def test_user_can_add_new_product(self):
+        saved_product = admintasks.read_id_from_table(table_column='CustomerID', table_name='Product', id_to_query=1)
+        self.assertEqual(1, saved_product)
