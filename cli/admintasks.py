@@ -4,7 +4,7 @@ import sqlite3
 
     This module contains core methods handling database interactions
 
-    methods: 
+    methods:
                 write_customer_to_database
                 get_customer_list
                 read_id_from_table
@@ -48,7 +48,7 @@ def get_customer_list():
     purpose: get a list of customers
     author: casey dailey
     args: n/a
-    return: (list of tuples) ex: [(customer_id (integer), customer_name (string))] 
+    return: (list of tuples) ex: [(customer_id (integer), customer_name (string))]
     """
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
@@ -58,9 +58,9 @@ def get_customer_list():
         return c.fetchall()
 
 def read_id_from_table(table_column, table_name, id_to_query):
-    """ 
+    """
     purpose: Checks whether a specific ID exists in a table specified
-    author: Jordan Nelson 
+    author: Jordan Nelson
     args:
     ----------------
       table_column -- the column in the table to query
@@ -100,11 +100,11 @@ def activate_customer(id):
         conn.commit()
 
 def deactivate_customer(id):
-    """ 
+    """
     purpose: sets the active attribute to 0 (inactive)
     author: jordan nelson
     args: id -- (int) ID of the customer to deactivate
-    returns: n/a    
+    returns: n/a
     """
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
@@ -156,13 +156,13 @@ def create_payment_type(payment_type_name, account_number, customer_id):
 
 def get_payment_types(customer_id):
     """
-    purpose: 
+    purpose:
     author: Aaron Barfoot
     args: customer_id -- (integer) Id of customer whose payment types we need to list
-    returns: (list of tuples) 
-        ex: [(2, 'visa', 1234567890123456, 1)] 
+    returns: (list of tuples)
+        ex: [(2, 'visa', 1234567890123456, 1)]
         where the above values represent:
-        [(payment_type_id (integer), payment_type_name (string), account_number (integer), customer_id (integer))] 
+        [(payment_type_id (integer), payment_type_name (string), account_number (integer), customer_id (integer))]
     """
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
@@ -181,12 +181,12 @@ def get_payment_types(customer_id):
             return None
 
 def read_inventory():
-    """ 
+    """
     purpose: provide a list of available products
-    author: James Tonkin 
+    author: James Tonkin
     args: n/a
-    returns: (list of tuples) 
-        ex: [(2, 'cigs')] 
+    returns: (list of tuples)
+        ex: [(2, 'cigs')]
         where: [(2 is product_id (integer), 'cigs' is product_name (string))]
     """
 
@@ -205,10 +205,10 @@ def read_inventory():
             return None
 
 def create_order(customer_id):
-    """ 
+    """
     purpose: creates a new order for a customer
     author: James Tonkin
-    args: (integer) customer_id 
+    args: (integer) customer_id
     returns: (integer) id of order created
     """
 
@@ -232,7 +232,7 @@ def get_customer_open_order(customer_id):
         c = conn.cursor()
 
         c.execute("""select OrderID
-                     from Orders 
+                     from Orders
                      where CustomerID = {}
                      and PaymentTypeID is null""".format(customer_id))
 
@@ -240,7 +240,7 @@ def get_customer_open_order(customer_id):
         return customer_open_order
 
 def get_customer_order_total(customer_id):
-    """ 
+    """
     purpose: get total balance of a customer's order
     author: casey dailey
     args: (integer) id for customer whose order total we wish to see
@@ -258,13 +258,13 @@ def get_customer_order_total(customer_id):
                                from ProductOrder, Product
                                where ProductOrder.OrderID = {}
                                and Product.ProductID = ProductOrder.ProductID""".format(customer_open_order_id))
-    
+
     order_total = c.fetchone()
     return order_total[0]
 
 
 def add_product_to_customer_order(product_id, order_id):
-    """ 
+    """
     purpose: add products to a customer's order.
     author: James Tonkin
     args: (integer) product_id: product to add
@@ -286,23 +286,23 @@ def assign_payment_type_to_customer_order(order_id, payment_id):
     author: casey dailey
     args: (integer) order_id:  order to update
           (integer) payment_id:  payment type to apply
-    returns: n/a 
+    returns: n/a
     """
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-    c.execute("""update Orders 
-                 set PaymentTypeID = {} 
+    c.execute("""update Orders
+                 set PaymentTypeID = {}
                  where OrderID = {}""".format(payment_id, order_id[0]))
 
     conn.commit()
-    
+
 def read_top_three_products():
     """
     purpose: to show the top three most purchased (popular) products
     author: Harper Frankstone
     args: n/a
-    return: list of tuples 
+    return: list of tuples
         ex: [('Coffee', 7, 2, 28)]
         where: [(product_name (string), number_of_orders containing the product, number of customers who purchased the order, revenue from product)]
     """
@@ -310,15 +310,38 @@ def read_top_three_products():
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
-        c.execute("""SELECT Product.ProductName as Name, 
-                    Count(Distinct ProductOrder.ProductOrderID) as Purchased, 
-                    Count(Distinct Orders.CustomerID) as Orders, 
+        c.execute("""SELECT Product.ProductName as Name,
+                    Count(Distinct ProductOrder.ProductOrderID) as Purchased,
+                    Count(Distinct Orders.CustomerID) as Orders,
                     Sum(Product.ProductPrice) as Revenue
                     FROM ProductOrder, Product, Orders
                     WHERE Product.ProductID = ProductOrder.ProductID
                     AND Orders.OrderID = ProductOrder.OrderID
-                    GROUP BY Product.ProductName 
+                    GROUP BY Product.ProductName
                     ORDER BY Purchased desc limit 3""")
 
         top_three = c.fetchall()
         return top_three
+
+def view_active_customer_open_order(customer_id):
+    """
+    purpose: get a customer's open order so the user can view a list of products in the order
+    author: James Tonkin
+    args: (integer) customer_id  whose open order we need
+    returns: (tuple) containing Product Names ex: (coffee, etc.)
+    """
+    #get customer's open order id
+    customer_open_order = get_customer_open_order(customer_id)
+    customer_open_order_id = customer_open_order[0]
+
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
+
+        c.execute("""select Product.ProductName
+                     from Orders, Product, ProductOrder
+                     where Orders.OrderID = ProductOrder.OrderID
+                     and Orders.OrderID = {}
+                     and Product.ProductID = ProductOrder.ProductID""".format(customer_open_order_id))
+
+        customer_open_order_view = c.fetchall()
+        return customer_open_order_view

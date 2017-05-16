@@ -5,10 +5,10 @@ from run import *
 """
     ************** command_line_functions *****************
     This module serves as an intermediary relay between run.py and admintasks.py
-    providing the methods to run.py that respond to the user's interaction with the 
-    system and calling admintasks as needed. 
+    providing the methods to run.py that respond to the user's interaction with the
+    system and calling admintasks as needed.
 
-    methods: 
+    methods:
                 create_customer_cli
                 activate_customer_cli
                 create_payment_option_cli
@@ -55,7 +55,7 @@ def activate_customer_cli():
 
 def activate_a_customer_cli():
     """
-    purpose: allow user to activate a customer 
+    purpose: allow user to activate a customer
     author: Jordan Nelson
     args: n/a
     returns: n/a
@@ -102,12 +102,12 @@ def create_payment_option_cli():
     	create_payment_type(payment_type_name, account_number, customer_id)
 
 def add_product_to_cart_cli():
-    """ 
+    """
     purpose: allow user to add a product to an open order
     author: James Tonkin
     args: n/a
     returns: n/a
-    helpers: 
+    helpers:
     ---------------
         get_active_customer
         get_customer_open_order
@@ -168,7 +168,7 @@ def complete_order_cli():
     author: casey dailey
     args: n/a
     returns: n/a
-    helpers: 
+    helpers:
     -----------------
         get_active_customer
         get_customer_open_order
@@ -253,7 +253,7 @@ def product_popularity_cli():
     args: n/a
     returns: n/a
     helpers: read_top_three_products
-    prints a report that looks like this: 
+    prints a report that looks like this:
 
         Product           Orders     Customers  Revenue
     *******************************************************
@@ -269,18 +269,18 @@ def product_popularity_cli():
 
     top_three_products = read_top_three_products()
 
-    # initalize variables for item data 
+    # initalize variables for item data
     total_products = 0
-    total_orders = 0 
+    total_orders = 0
     total_customers = 0
-    total_revenue = 0 
+    total_revenue = 0
 
     # top_three_products = [('Coffee', 7, 2, 28), ('Cigs', 5, 2, 50), ('Mug', 4, 2, 20)]
     # count the number of characters in
     # name of product
     # how many times ordered
     # how many customers ordered product
-    # total sales for product 
+    # total sales for product
     for each in top_three_products:
         popular_product_character_count = len(each[0])
         order_count = len(str(each[1]))
@@ -300,21 +300,28 @@ def product_popularity_cli():
         r = ' ' * revenue_column_spaces
 
         #convert integers to strings to make command line happy
-        number_of_orders = str(each[1]) 
+        number_of_orders = str(each[1])
         customer_number = str(each[2])
         revenue_number = str(each[3])
 
-        #print product_name + product_spaces, number_of_orders + order_spaces, revenue_spaces + revenue_number (amount) 
+        #print product_name + product_spaces, number_of_orders + order_spaces, revenue_spaces + revenue_number (amount)
         print(each[0] + s + number_of_orders + o + customer_number + r + revenue_number)
         #gather orders, customers, and revenue totals for display below
         total_orders += each[1]
         total_customers += each[2]
         total_revenue += each[3]
-        
+
     print('*******************************************************')
     print('Totals:           ' + str(total_orders) + '          ' + str(total_customers) + '             ' + '$' + str(total_revenue))
     print('')
     input('-> press return go back to the main menu')
 
+def view_active_customer_open_order_cli():
 
+    customer_id = get_active_customer()
+    open_order_view = view_active_customer_open_order(customer_id)
 
+    i = 0
+    for products in open_order_view:
+        i += 1
+        print('{}. {}'.format(i, products[0]))

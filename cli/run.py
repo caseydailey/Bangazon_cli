@@ -1,19 +1,19 @@
 from admintasks import *
 from command_line_functions import *
 
-""" 
+"""
     ************ run.py ********
 
     This Module serves as an interface between admintasks, command_line_functions, and the CLI
     It's purpose is to handle the user's interaction with the system by displaying menu options,
-    gather the user's input and respond accordingly, 
+    gather the user's input and respond accordingly,
     calling the necessary methods in the command_line_functions methods.
 
 """
 
 def build_menu():
     """
-    purpose: Displays the initial menu to the user   
+    purpose: Displays the initial menu to the user
     author: Jordan Nelson
     args: n/a
     returns: n/a
@@ -25,13 +25,14 @@ def build_menu():
     print('2. Choose active customer')
     print('3. Create a payment option')
     print('4. Add product to shopping cart')
-    print('5. Complete an order')
-    print('6. See product popularity')
-    print('7. Leave Bangazon!')
+    print('5. View products in active customer order')
+    print('6. Complete an order')
+    print('7. See product popularity')
+    print('8. Leave Bangazon!')
 
 def start_program_menu():
     """
-    purpose: Allows the user to select an option which calls 
+    purpose: Allows the user to select an option which calls
     author: Jordan Nelson
     args: n/a
     returns: n/a
@@ -52,12 +53,15 @@ def start_program_menu():
         add_product_to_cart_cli()
 
     if choice == '5':
-        complete_order_cli()
+        view_active_customer_open_order_cli()
 
     if choice == '6':
-        product_popularity_cli()
+        complete_order_cli()
 
     if choice == '7':
+        product_popularity_cli()
+
+    if choice == '8':
         active_customer = get_active_customer()
         deactivate_customer(active_customer)
         quit()
@@ -66,4 +70,3 @@ def start_program_menu():
 
 if __name__ == '__main__':
 	start_program_menu()
-
