@@ -43,6 +43,9 @@ def write_customer_to_database(name, address, city, state, postal_code, telephon
 
         conn.commit()
 
+        last_customer_id = c.lastrowid
+        return last_customer_id
+
 def get_customer_list():
     """
     purpose: get a list of customers
@@ -108,9 +111,7 @@ def deactivate_customer(id):
     """
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
-
         c.execute("""update Customer set Active = {} where CustomerID is {}""".format(0, id))
-
         conn.commit()
 
 def get_active_customer():
@@ -238,6 +239,32 @@ def get_customer_open_order(customer_id):
 
         customer_open_order = c.fetchone()
         return customer_open_order
+
+def view_products_in_customer_open_order(customer_id):
+    """
+    purpose: allow the user to view products in a customer's order
+    author: Casey Dailey
+    args: (integer) customer_id  whose open order we need
+    returns: (list of tuples) [('Skittles', 2), ('Shoes', 40), ('Shoes', 40)]
+             where [(prduct_name=(str), price=(int))]
+    """
+    #get the ID of the customer's open order
+    open_order_tuple = get_customer_open_order(customer_id)
+    open_order_id = open_order_tuple[0]
+
+    with sqlite3.connect('../db.db') as conn:
+        c = conn.cursor()
+
+        query_string = """select Product.ProductName, Product.ProductPrice, Product.ProductID
+                    from Orders, Product, ProductOrder 
+                    where Orders.OrderID = {}
+                    and ProductOrder.OrderID = Orders.OrderID
+                    and ProductOrder.ProductID = Product.ProductID"""
+
+        c.execute(query_string.format(open_order_id))
+        customer_cart = c.fetchall()
+        return customer_cart, query_string
+    
 
 def get_customer_order_total(customer_id):
     """ 

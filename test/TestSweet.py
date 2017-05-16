@@ -20,3 +20,13 @@ class TestSweet(unittest.TestCase):
     def test_user_can_see_product_popularity(self):
         top_products = admintasks.read_top_three_products()
         self.assertIn('Coffee', top_products[0])
+
+    def test_user_can_view_products_in_customer_open_order(self):
+        cart = admintasks.view_products_in_customer_open_order(1)#customer 1, order 1
+        query_string = cart[1]
+
+        self.assertEqual("""select Product.ProductName, Product.ProductPrice, Product.ProductID
+                    from Orders, Product, ProductOrder 
+                    where Orders.OrderID = {}
+                    and ProductOrder.OrderID = Orders.OrderID
+                    and ProductOrder.ProductID = Product.ProductID""", query_string)
