@@ -342,3 +342,25 @@ def order_contents_cli():
     for prodname in content_name:
         i += 1
         print("{}. {}".format(i, prodname))
+
+
+def add_sellable_products_cli():
+    """
+    purpose: give the user the ability to add products to sell, and specify the active customer as the seller
+    author: Harper Frankstone
+    args: n/a
+    returns: n/a
+    helpers: 
+    """
+
+    print('Enter the name of the Product: ')
+    product_name = input('> ')
+
+    print('Enter the price of the Product: ')
+    product_price = input('> ')
+ 
+    active_customer = get_active_customer()
+
+    add_product_as_sellable(product_name, product_price, active_customer)
+
+    print('The {} will be on sale at ${}'.format(product_name, product_price))

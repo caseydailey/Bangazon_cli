@@ -357,7 +357,7 @@ def read_order_contents(order_id):
         except TypeError:
             return None
 
-def add_product_as_sellable(active_customer_id, product_name, product_price):
+def add_product_as_sellable(product_name, product_price, active_customer_id):
     """
     purpose: to show the products that have been added as 'sellable' for a customer 
     author: Harper Frankstone
@@ -366,7 +366,6 @@ def add_product_as_sellable(active_customer_id, product_name, product_price):
           product_price = the price of the product (integer)
     return: n/a 
     """
-
     with sqlite3.connect('../db.db') as conn:
         c = conn.cursor()
 
